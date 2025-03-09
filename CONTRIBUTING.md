@@ -47,27 +47,27 @@ If you have a suggestion for improving the project, we'd love to hear it. Please
 
 ### Prerequisites
 
-Before getting started with REPLACE-ME, ensure your runtime environment meets the following requirements:
+Before getting started with petkit-device-cards, ensure your runtime environment meets the following requirements:
 
 - **Programming Language:** TypeScript
 - **Package Manager:** Npm
 
 ### Installation
 
-Install REPLACE-ME using one of the following methods:
+Install petkit-device-cards using one of the following methods:
 
 **Build from source:**
 
-1. Clone the REPLACE-ME repository:
+1. Clone the petkit-device-cards repository:
 
 ```sh
-❯ git clone https://github.com/homeassistant-extras/REPLACE-ME
+❯ git clone https://github.com/homeassistant-extras/petkit-device-cards
 ```
 
 2. Navigate to the project directory:
 
 ```sh
-❯ cd REPLACE-ME
+❯ cd petkit-device-cards
 ```
 
 3. Install the project dependencies:
@@ -124,20 +124,16 @@ If you have any questions, please feel free to:
 | 📦 **Dependencies**  | <ul><li>Maintains a clear dependency graph using `package-lock.json` and `npm`.</li><li>Utilizes tools like `hacs.json` for efficient package management.</li><li>Maintains compatibility with various browsers and environments.</li></ul> |
 | 🚀 **Scalability**   | <ul><li>Emphasizes scalability through modular development and efficient testing.</li><li>Maintains a focus on data integrity and accuracy.</li><li>Ensures seamless integration with Home Assistant's architecture and integration.</li></ul>
 
+<!-- prettier-ignore-end -->
+
 **Key Tools and Technologies:**
 
-* TypeScript
-* Prettier
-* GitHub Actions
-* Lit library
-* Mocha
-* Chai
-
----
-
-// todo - project structure
-
-<!-- prettier-ignore-end -->
+- TypeScript
+- Prettier
+- GitHub Actions
+- Lit library
+- Mocha
+- Chai
 
 ## License
 

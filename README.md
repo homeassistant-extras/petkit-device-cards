@@ -9,15 +9,15 @@
 ![Home Assistant](https://img.shields.io/badge/home%20assistant-%2341BDF5.svg?style=for-the-badge&logo=home-assistant&logoColor=white)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/hacs/integration)
 
-![GitHub Release](https://img.shields.io/github/v/release/homeassistant-extras/REPLACE-ME?style=for-the-badge&logo=github)
-![GitHub Pre-Release](https://img.shields.io/github/v/release/homeassistant-extras/REPLACE-ME?include_prereleases&style=for-the-badge&logo=github&label=PRERELEASE)
-![GitHub Tag](https://img.shields.io/github/v/tag/homeassistant-extras/REPLACE-ME?style=for-the-badge&color=yellow)
-![GitHub branch status](https://img.shields.io/github/checks-status/homeassistant-extras/REPLACE-ME/main?style=for-the-badge)
+![GitHub Release](https://img.shields.io/github/v/release/homeassistant-extras/petkit-device-cards?style=for-the-badge&logo=github)
+![GitHub Pre-Release](https://img.shields.io/github/v/release/homeassistant-extras/petkit-device-cards?include_prereleases&style=for-the-badge&logo=github&label=PRERELEASE)
+![GitHub Tag](https://img.shields.io/github/v/tag/homeassistant-extras/petkit-device-cards?style=for-the-badge&color=yellow)
+![GitHub branch status](https://img.shields.io/github/checks-status/homeassistant-extras/petkit-device-cards/main?style=for-the-badge)
 
-![stars](https://img.shields.io/github/stars/homeassistant-extras/REPLACE-ME.svg?style=for-the-badge)
-![home](https://img.shields.io/github/last-commit/homeassistant-extras/REPLACE-ME.svg?style=for-the-badge)
-![commits](https://img.shields.io/github/commit-activity/y/homeassistant-extras/REPLACE-ME?style=for-the-badge)
-![license](https://img.shields.io/github/license/homeassistant-extras/REPLACE-ME?style=for-the-badge&logo=opensourceinitiative&logoColor=white&color=0080ff)
+![stars](https://img.shields.io/github/stars/homeassistant-extras/petkit-device-cards.svg?style=for-the-badge)
+![home](https://img.shields.io/github/last-commit/homeassistant-extras/petkit-device-cards.svg?style=for-the-badge)
+![commits](https://img.shields.io/github/commit-activity/y/homeassistant-extras/petkit-device-cards?style=for-the-badge)
+![license](https://img.shields.io/github/license/homeassistant-extras/petkit-device-cards?style=for-the-badge&logo=opensourceinitiative&logoColor=white&color=0080ff)
 
 <p align="center">Built with the tools and technologies:</p>
 <p align="center">
@@ -35,29 +35,28 @@ A custom card for Home Assistant that provides a comprehensive room overview, in
 
 ## Features
 
-
 ## Installation
 
 ### HACS (Recommended)
 
-[![HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=homeassistant-extras&repository=REPLACE-ME&category=dashboard)
+[![HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=homeassistant-extras&repository=petkit-device-cards&category=dashboard)
 
 1. Open HACS in your Home Assistant instance
 2. Click the menu icon in the top right and select "Custom repositories"
 3. Add this repository URL and select "Dashboard" as the category
-   - `https://github.com/homeassistant-extras/REPLACE-ME`
+   - `https://github.com/homeassistant-extras/petkit-device-cards`
 4. Click "Install"
 
 ### Manual Installation
 
-1. Download the `REPLACE-ME.js` file from the latest release in the Releases tab.
-2. Copy it to your `www/community/REPLACE-ME/` folder
+1. Download the `petkit-device-cards.js` file from the latest release in the Releases tab.
+2. Copy it to your `www/community/petkit-device-cards/` folder
 3. Add the following to your `configuration.yaml` (or add as a resource in dashboards menu)
 
 ```yaml
 lovelace:
   resources:
-    - url: /local/community/REPLACE-ME/REPLACE-ME.js
+    - url: /local/community/petkit-device-cards/petkit-device-cards.js
       type: module
 ```
 
@@ -78,33 +77,29 @@ Slowly I'm enabling all the features in the card editor. Note that as things get
 This is the most minimal configuarion needed to get started. See below for advanced usage.
 
 ```yaml
-type: custom:REPLACE-ME
+type: custom:petkit-device-cards
 area: living_room
 ```
 
 The card will automatically:
-
 
 ## Example Configurations
 
 ### Basic Configuration
 
 ```yaml
-type: custom:REPLACE-ME
+type: custom:petkit-device-cards
 area: living_room
 ```
 
 ### Full Configuration
 
 ```yaml
-type: custom:REPLACE-ME
+type: custom:petkit-device-cards
 area: living_room
-...
 ```
 
 For examples, see my HA configuration for my dashboard home page: [01-home.yaml](https://github.com/warmfire540/home-assistant-config-public/blob/home/ui_lovelace_minimalist/dashboard/views/01-home.yaml)
-
-
 
 ## Project Roadmap
 
@@ -112,9 +107,9 @@ For examples, see my HA configuration for my dashboard home page: [01-home.yaml]
 
 ## Contributing
 
-- **💬 [Join the Discussions](https://github.com/homeassistant-extras/REPLACE-ME/discussions)**: Share your insights, provide feedback, or ask questions.
-- **🐛 [Report Issues](https://github.com/homeassistant-extras/REPLACE-ME/issues)**: Submit bugs found or log feature requests for the `REPLACE-ME` project.
-- **💡 [Submit Pull Requests](https://github.com/homeassistant-extras/REPLACE-ME/blob/main/CONTRIBUTING.md)**: Review open PRs, and submit your own PRs.
+- **💬 [Join the Discussions](https://github.com/homeassistant-extras/petkit-device-cards/discussions)**: Share your insights, provide feedback, or ask questions.
+- **🐛 [Report Issues](https://github.com/homeassistant-extras/petkit-device-cards/issues)**: Submit bugs found or log feature requests for the `petkit-device-cards` project.
+- **💡 [Submit Pull Requests](https://github.com/homeassistant-extras/petkit-device-cards/blob/main/CONTRIBUTING.md)**: Review open PRs, and submit your own PRs.
 - **📣 [Check out discord](https://discord.gg/F28wupKC)**: Need further help, have ideas, want to chat?
 
 <details closed>
@@ -123,7 +118,7 @@ For examples, see my HA configuration for my dashboard home page: [01-home.yaml]
 1. **Fork the Repository**: Start by forking the project repository to your github account.
 2. **Clone Locally**: Clone the forked repository to your local machine using a git client.
    ```sh
-   git clone https://github.com/homeassistant-extras/REPLACE-ME
+   git clone https://github.com/homeassistant-extras/petkit-device-cards
    ```
 3. **Create a New Branch**: Always work on a new branch, giving it a descriptive name.
    ```sh
@@ -153,7 +148,7 @@ This project is protected under the MIT License. For more details, refer to the 
 - Button-Card was a huge inspo
 - Thanks to all contributors!
 
-[![contributors](https://contrib.rocks/image?repo=homeassistant-extras/REPLACE-ME)](https://github.com{/homeassistant-extras/REPLACE-ME/}graphs/contributors)
+[![contributors](https://contrib.rocks/image?repo=homeassistant-extras/petkit-device-cards)](https://github.com{/homeassistant-extras/petkit-device-cards/}graphs/contributors)
 
 [![ko-fi](https://img.shields.io/badge/buy%20me%20a%20coffee-72A5F2?style=for-the-badge&logo=kofi&logoColor=white)](https://ko-fi.com/N4N71AQZQG)
 
@@ -163,29 +158,29 @@ Forgive me and my badges..
 
 Stats
 
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=homeassistant-extras_REPLACE-ME&metric=bugs)](https://sonarcloud.io/summary/new_code?id=homeassistant-extras_REPLACE-ME)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=homeassistant-extras_REPLACE-ME&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=homeassistant-extras_REPLACE-ME)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=homeassistant-extras_REPLACE-ME&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=homeassistant-extras_REPLACE-ME)
-[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=homeassistant-extras_REPLACE-ME&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=homeassistant-extras_REPLACE-ME)
-[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=homeassistant-extras_REPLACE-ME&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=homeassistant-extras_REPLACE-ME)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=homeassistant-extras_REPLACE-ME&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=homeassistant-extras_REPLACE-ME)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=homeassistant-extras_REPLACE-ME&metric=coverage)](https://sonarcloud.io/summary/new_code?id=homeassistant-extras_REPLACE-ME)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=homeassistant-extras_petkit-device-cards&metric=bugs)](https://sonarcloud.io/summary/new_code?id=homeassistant-extras_petkit-device-cards)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=homeassistant-extras_petkit-device-cards&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=homeassistant-extras_petkit-device-cards)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=homeassistant-extras_petkit-device-cards&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=homeassistant-extras_petkit-device-cards)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=homeassistant-extras_petkit-device-cards&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=homeassistant-extras_petkit-device-cards)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=homeassistant-extras_petkit-device-cards&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=homeassistant-extras_petkit-device-cards)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=homeassistant-extras_petkit-device-cards&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=homeassistant-extras_petkit-device-cards)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=homeassistant-extras_petkit-device-cards&metric=coverage)](https://sonarcloud.io/summary/new_code?id=homeassistant-extras_petkit-device-cards)
 
 Ratings
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=homeassistant-extras_REPLACE-ME&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=homeassistant-extras_REPLACE-ME)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=homeassistant-extras_REPLACE-ME&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=homeassistant-extras_REPLACE-ME)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=homeassistant-extras_REPLACE-ME&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=homeassistant-extras_REPLACE-ME)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=homeassistant-extras_REPLACE-ME&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=homeassistant-extras_REPLACE-ME)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=homeassistant-extras_petkit-device-cards&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=homeassistant-extras_petkit-device-cards)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=homeassistant-extras_petkit-device-cards&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=homeassistant-extras_petkit-device-cards)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=homeassistant-extras_petkit-device-cards&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=homeassistant-extras_petkit-device-cards)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=homeassistant-extras_petkit-device-cards&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=homeassistant-extras_petkit-device-cards)
 
 ## Build Status
 
 ### Main
 
-[![Bump & Tag](https://github.com/homeassistant-extras/REPLACE-ME/actions/workflows/push.yml/badge.svg?branch=main)](https://github.com/homeassistant-extras/REPLACE-ME/actions/workflows/push.yml)
-[![Fast Forward Check](https://github.com/homeassistant-extras/REPLACE-ME/actions/workflows/pull_request.yaml/badge.svg?branch=main)](https://github.com/homeassistant-extras/REPLACE-ME/actions/workflows/pull_request.yaml)
+[![Bump & Tag](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/push.yml/badge.svg?branch=main)](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/push.yml)
+[![Fast Forward Check](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/pull_request.yaml/badge.svg?branch=main)](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/pull_request.yaml)
 
 ### Release
 
-[![Bump & Tag](https://github.com/homeassistant-extras/REPLACE-ME/actions/workflows/push.yml/badge.svg?branch=release)](https://github.com/homeassistant-extras/REPLACE-ME/actions/workflows/push.yml)
-[![Merge](https://github.com/homeassistant-extras/REPLACE-ME/actions/workflows/merge.yaml/badge.svg)](https://github.com/homeassistant-extras/REPLACE-ME/actions/workflows/merge.yaml)
+[![Bump & Tag](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/push.yml/badge.svg?branch=release)](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/push.yml)
+[![Merge](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/merge.yaml/badge.svg)](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/merge.yaml)
