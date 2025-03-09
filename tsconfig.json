@@ -23,6 +23,7 @@
       "@type/*": ["./src/types/*"],
       "@hass/*": ["./src/hass/*"],
       "@theme/*": ["./src/theme/*"],
+      "@html/*": ["./src/html/*"],
       "@delegates/*": ["./src/delegates/*"],
       "@/*": ["./src/*"]
     }

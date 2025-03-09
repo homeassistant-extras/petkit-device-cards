@@ -24,13 +24,24 @@ export interface PetKitUnit {
   name?: string;
 
   /** The sensors of the device */
-  sensors: EntityState[];
+  sensors: EntityInformation[];
 
   /** The diagnostics of the device */
-  diagnostics: EntityState[];
+  diagnostics: EntityInformation[];
 
   /** The configurations of the device */
-  configurations: EntityState[];
+  configurations: EntityInformation[];
+
+  /** The problem entities of the device */
+  problemEntities: EntityInformation[];
+}
+
+export interface EntityInformation extends EntityState {
+  /** Optional category of the entity */
+  category?: EntityCategory;
+
+  /** Name of the entity */
+  name: string;
 }
 
 export interface EntityState {
@@ -39,9 +50,6 @@ export interface EntityState {
 
   /** Current state value as a string (e.g., "on", "off", "25.5") */
   state: string;
-
-  /** Optional category of the entity */
-  category?: EntityCategory;
 
   /** Additional attributes associated with the state */
   attributes: Record<string, any>;

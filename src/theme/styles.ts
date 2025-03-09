@@ -13,6 +13,8 @@ export const styles = css`
 
   ha-card {
     padding: 16px;
+    position: relative;
+    z-index: 1;
   }
 
   .card-header {
@@ -23,8 +25,17 @@ export const styles = css`
     margin-bottom: 8px;
   }
 
-  .problem {
-    background: rgba(var(--rgb-error), 0.15);
+  .problem::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: var(--ha-card-border-radius, 12px);
+    background: var(--error-color);
+    opacity: 0.1;
+    z-index: -1;
   }
 
   .section {
@@ -49,13 +60,13 @@ export const styles = css`
     border-radius: 4px;
   }
 
-  .value-wrapper {
+  .value {
     display: flex;
     align-items: center;
     font-weight: 500;
   }
 
-  .label-wrapper {
+  .label {
     display: flex;
     align-items: center;
     gap: 8px;
