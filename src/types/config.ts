@@ -14,6 +14,9 @@ export interface Config {
 
   /** Optional display title for the device */
   title?: string;
+
+  /** How many sensors to preview */
+  preview_count?: number;
 }
 
 /**

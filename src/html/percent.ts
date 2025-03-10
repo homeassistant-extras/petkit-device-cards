@@ -1,6 +1,6 @@
 import type { EntityState } from '@type/config';
 import { html, type TemplateResult } from 'lit';
-import { styleMap } from 'lit/directives/style-map';
+import { styleMap } from 'lit/directives/style-map.js';
 
 export const percentBar = (entity: EntityState): TemplateResult => {
   // Extract the percentage value from the entity state

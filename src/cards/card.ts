@@ -3,12 +3,10 @@ import { getDeviceEntities } from '@delegates/utils/card-entities';
 import { hasProblem } from '@delegates/utils/has-problem';
 import { isPetKit } from '@delegates/utils/is-petkit';
 import { computeDomain } from '@hass/common/entity/compute_domain';
-import { stateActive } from '@hass/common/entity/state_active';
 import type { HomeAssistant } from '@hass/types';
-import { percentBar } from '@html/percent';
-import { stateContent } from '@html/stateContent';
+import { renderSection } from '@html/section';
 import { styles } from '@theme/styles';
-import type { Config, EntityInformation, PetKitUnit } from '@type/config';
+import type { Config, PetKitUnit } from '@type/config';
 import { CSSResult, html, LitElement, nothing, type TemplateResult } from 'lit';
 import { state } from 'lit/decorators.js';
 import { version } from '../../package.json';
@@ -32,6 +30,12 @@ export class PetKitDevice extends LitElement {
    * Not marked as @state as it's handled differently
    */
   private _hass!: HomeAssistant;
+
+  /**
+   * Track expanded state of sections
+   */
+  @state()
+  public expandedSections: Record<string, boolean> = {};
 
   constructor() {
     super();
@@ -124,45 +128,6 @@ export class PetKitDevice extends LitElement {
   }
 
   /**
-   * Renders a section with its rows
-   * @param {string} title - Section title
-   * @param {Array} entities - List of entities to render
-   * @returns {TemplateResult} The rendered section
-   */
-  private _renderSection(
-    title: string,
-    entities: EntityInformation[],
-  ): TemplateResult | typeof nothing {
-    if (!entities || entities.length === 0) {
-      return nothing;
-    }
-
-    return html`<div class="section">
-      <div class="section-title">${title}</div>
-      ${entities.map((entity) => {
-        let className: string | undefined;
-
-        if (
-          entity.attributes.device_class === 'problem' ||
-          entity.translation_key === 'device_status'
-        ) {
-          // add color to problem class based on state
-          const active = stateActive(entity);
-          className = active ? 'status-error' : 'status-ok';
-        }
-
-        return html`<div class="row">
-          ${stateContent(this._hass, entity, className)}
-          ${entity.attributes.state_class === 'measurement' &&
-          entity.attributes.unit_of_measurement === '%'
-            ? percentBar(entity)
-            : nothing}
-        </div>`;
-      })}
-    </div>`;
-  }
-
-  /**
    * renders the lit element card
    * @returns {TemplateResult} The rendered HTML template
    */
@@ -186,10 +151,34 @@ export class PetKitDevice extends LitElement {
           />
         </div>
 
-        ${this._renderSection('Controls', this._unit.controls)}
-        ${this._renderSection('Configuration', this._unit.configurations)}
-        ${this._renderSection('Sensors', this._unit.sensors)}
-        ${this._renderSection('Diagnostic', this._unit.diagnostics)}
+        ${renderSection(
+          this,
+          this._hass,
+          this._config,
+          'Controls',
+          this._unit.controls,
+        )}
+        ${renderSection(
+          this,
+          this._hass,
+          this._config,
+          'Configuration',
+          this._unit.configurations,
+        )}
+        ${renderSection(
+          this,
+          this._hass,
+          this._config,
+          'Sensors',
+          this._unit.sensors,
+        )}
+        ${renderSection(
+          this,
+          this._hass,
+          this._config,
+          'Diagnostic',
+          this._unit.diagnostics,
+        )}
       </ha-card>
     `;
   }

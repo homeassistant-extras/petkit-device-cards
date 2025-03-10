@@ -1,7 +1,7 @@
 <p align="center">
     <img src="assets/room-cards.png" align="center" width="50%">
 </p>
-<p align="center"><h1 align="center">Room Summary Card</h1></p>
+<p align="center"><h1 align="center">PetKit Device Card</h1></p>
 <p align="center">
 	<em>Room Data at Your Fingertips</em>
 </p>

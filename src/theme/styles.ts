@@ -1,7 +1,7 @@
 import { css } from 'lit';
 
 /**
- * Static CSS styles for the Room Summary Card
+ * Static CSS styles for the PetKit Device Card
  * Defines the grid layout and styling for all card elements
  */
 export const styles = css`
@@ -52,6 +52,14 @@ export const styles = css`
     z-index: -1;
   }
 
+  /* Section header with expand/collapse functionality */
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
   .section-title {
     font-weight: 500;
     color: var(--section-color);
@@ -61,12 +69,47 @@ export const styles = css`
     letter-spacing: 0.5px;
   }
 
+  .section-chevron {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    color: var(--secondary-text-color);
+    display: flex;
+    align-items: center;
+  }
+
+  .section-chevron.expanded {
+    transform: rotate(180deg);
+  }
+
+  .section-footer {
+    text-align: center;
+    padding: 4px 0;
+  }
+
+  .show-more {
+    color: var(--primary-color);
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 4px 0;
+  }
+
+  .show-more:hover {
+    text-decoration: underline;
+  }
+
   .model {
     font-size: 0.9rem;
     color: var(--secondary-text-color);
   }
 
-  .section:not(:last-child) {
+  /* Base section spacing */
+  .section {
+    margin-bottom: 16px;
+  }
+
+  /* Apply larger margin only to expanded sections or those with fewer than 5 items */
+  .section.expanded:not(:last-child),
+  .section.few-items:not(:last-child) {
     margin-bottom: 40px;
   }
 

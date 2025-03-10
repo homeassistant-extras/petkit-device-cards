@@ -26,6 +26,16 @@ const SCHEMA: HaFormSchema[] = [
       text: {},
     },
   },
+  {
+    name: 'preview_count',
+    required: false,
+    label: 'Preview Count',
+    selector: {
+      text: {
+        type: 'number',
+      },
+    },
+  },
 ];
 
 export class PetKitDeviceEditor extends LitElement {
@@ -71,9 +81,6 @@ export class PetKitDeviceEditor extends LitElement {
 
   private _valueChanged(ev: CustomEvent) {
     const config = ev.detail.value as Config;
-    // if (!config.features?.length) {
-    //   delete config.features;
-    // }
 
     // @ts-ignore
     fireEvent(this, 'config-changed', {

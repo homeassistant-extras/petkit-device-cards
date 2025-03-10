@@ -1,7 +1,7 @@
 /**
- * Room Summary Card Registration Module
+ * PetKit Device Card Registration Module
  *
- * This module handles the registration of the Room Summary Card custom element
+ * This module handles the registration of the PetKit Device Card custom element
  * with the browser and Home Assistant's custom card registry. It makes the
  * component available for use in Home Assistant dashboards.
  */
