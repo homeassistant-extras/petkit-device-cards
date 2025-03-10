@@ -11,4 +11,5 @@ export interface EntityRegistryDisplayEntry {
   device_id: string;
   labels: string[];
   entity_category?: EntityCategory;
+  translation_key?: string;
 }

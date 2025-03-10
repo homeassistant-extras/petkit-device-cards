@@ -23,6 +23,11 @@ export interface PetKitUnit {
   /** The name of the device */
   name?: string;
 
+  model?: string;
+
+  /** Entities used to control the unit */
+  controls: EntityInformation[];
+
   /** The sensors of the device */
   sensors: EntityInformation[];
 
@@ -40,8 +45,8 @@ export interface EntityInformation extends EntityState {
   /** Optional category of the entity */
   category?: EntityCategory;
 
-  /** Name of the entity */
-  name: string;
+  /** Translation key */
+  translation_key: string | undefined;
 }
 
 export interface EntityState {

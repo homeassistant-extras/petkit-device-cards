@@ -5,6 +5,7 @@ import type { EntityInformation } from '@type/config';
 export const getDeviceEntities = (
   hass: HomeAssistant,
   deviceId: string,
+  deviceName: string | null,
 ): EntityInformation[] => {
   const deviceEntities = Object.values(hass.entities)
     .filter((entity) => entity.device_id === deviceId)
@@ -13,12 +14,18 @@ export const getDeviceEntities = (
       if (state === undefined) {
         return;
       }
+
+      // convenience
+      const name = state.attributes.friendly_name.replace(deviceName, '');
       return {
         entity_id: entity.entity_id,
         category: entity.entity_category,
-        name: state.attributes.friendly_name || entity.name,
         state: state.state,
-        attributes: state.attributes,
+        translation_key: entity.translation_key,
+        attributes: {
+          ...state.attributes,
+          friendly_name: name,
+        },
       } as EntityInformation;
     })
     .filter((e) => e !== undefined) as EntityInformation[];

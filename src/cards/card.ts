@@ -1,9 +1,12 @@
-import { renderEntityRow } from '@/html/row';
 import { getDevice } from '@delegates/retrievers/device';
 import { getDeviceEntities } from '@delegates/utils/card-entities';
 import { hasProblem } from '@delegates/utils/has-problem';
 import { isPetKit } from '@delegates/utils/is-petkit';
+import { computeDomain } from '@hass/common/entity/compute_domain';
+import { stateActive } from '@hass/common/entity/state_active';
 import type { HomeAssistant } from '@hass/types';
+import { percentBar } from '@html/percent';
+import { stateContent } from '@html/stateContent';
 import { styles } from '@theme/styles';
 import type { Config, EntityInformation, PetKitUnit } from '@type/config';
 import { CSSResult, html, LitElement, nothing, type TemplateResult } from 'lit';
@@ -64,6 +67,7 @@ export class PetKitDevice extends LitElement {
 
     const unit: PetKitUnit = {
       sensors: [],
+      controls: [],
       diagnostics: [],
       configurations: [],
       problemEntities: [],
@@ -75,8 +79,9 @@ export class PetKitDevice extends LitElement {
     }
 
     unit.name = device.name || 'PetKit Device';
+    unit.model = `${device.model} ${device.model_id}`;
 
-    const entities = getDeviceEntities(hass, device.id);
+    const entities = getDeviceEntities(hass, device.id, device.name);
     if (entities.length) {
       entities.forEach((entity) => {
         if (entity.category === 'diagnostic') {
@@ -88,8 +93,14 @@ export class PetKitDevice extends LitElement {
           if (entity.attributes.device_class === 'problem') {
             unit.problemEntities.push(entity);
           }
-          // everything else is a sensor
-          unit.sensors.push(entity);
+
+          const domain = computeDomain(entity.entity_id);
+          if (['text', 'button', 'switch', 'select'].includes(domain)) {
+            unit.controls.push(entity);
+          } else {
+            // everything else is a sensor
+            unit.sensors.push(entity);
+          }
         }
       });
     }
@@ -126,12 +137,29 @@ export class PetKitDevice extends LitElement {
       return nothing;
     }
 
-    return html`
-      <div class="section">${title}</div>
-      ${entities.map((entity) =>
-        renderEntityRow(this._hass, this._unit, entity),
-      )}
-    `;
+    return html`<div class="section">
+      <div class="section-title">${title}</div>
+      ${entities.map((entity) => {
+        let className: string | undefined;
+
+        if (
+          entity.attributes.device_class === 'problem' ||
+          entity.translation_key === 'device_status'
+        ) {
+          // add color to problem class based on state
+          const active = stateActive(entity);
+          className = active ? 'status-error' : 'status-ok';
+        }
+
+        return html`<div class="row">
+          ${stateContent(this._hass, entity, className)}
+          ${entity.attributes.state_class === 'measurement' &&
+          entity.attributes.unit_of_measurement === '%'
+            ? percentBar(entity)
+            : nothing}
+        </div>`;
+      })}
+    </div>`;
   }
 
   /**
@@ -147,8 +175,18 @@ export class PetKitDevice extends LitElement {
 
     return html`
       <ha-card class="${problem ? 'problem' : ''}">
-        <div class="card-header">${this._config.title || this._unit.name}</div>
+        <div class="card-header">
+          <div class="title">
+            <span>${this._config.title || this._unit.name}</span>
+            <span class="model">${this._unit.model}</span>
+          </div>
+          <img
+            class="logo"
+            src="https://brands.home-assistant.io/petkit/dark_icon.png"
+          />
+        </div>
 
+        ${this._renderSection('Controls', this._unit.controls)}
         ${this._renderSection('Configuration', this._unit.configurations)}
         ${this._renderSection('Sensors', this._unit.sensors)}
         ${this._renderSection('Diagnostic', this._unit.diagnostics)}
