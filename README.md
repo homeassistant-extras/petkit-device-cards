@@ -1,9 +1,9 @@
 <p align="center">
-    <img src="assets/room-cards.png" align="center" width="50%">
+    <img src="assets/cards.png" align="center" width="50%">
 </p>
 <p align="center"><h1 align="center">PetKit Device Card</h1></p>
 <p align="center">
-	<em>Room Data at Your Fingertips</em>
+	<em>PetKit Device Integration Related Cards</em>
 </p>
 
 ![Home Assistant](https://img.shields.io/badge/home%20assistant-%2341BDF5.svg?style=for-the-badge&logo=home-assistant&logoColor=white)
@@ -31,9 +31,42 @@
 
 ## Overview
 
-A custom card for Home Assistant that provides a comprehensive room overview, including climate information, device states, and problem indicators. The card displays room temperature, humidity, connected devices, and entity states in an organized grid layout.
+A custom card for Home Assistant that provides a comprehensive overview of your PetKit devices, including feeders, water fountains, litter boxes, and other pet care devices. The card organizes device information into expandable sections, displaying sensors, controls, configuration options, and diagnostic data in a clean, user-friendly interface.
 
 ## Features
+
+### Device Information Display
+
+- Shows device name and model information
+- Organizes entities into logical categories:
+  - Controls - for interactive elements like buttons and switches
+  - Sensors - for data readings and status information
+  - Configuration - for device settings
+  - Diagnostic - for troubleshooting information
+
+![device-sections](assets/cards.png)
+
+### Problem Detection
+
+- Automatically detects entities labeled as "problem" in the device
+- Visual indication when problems are detected (card border turns red)
+- Easy identification of issues requiring attention
+
+![problem-detection](assets/problems.png)
+
+### Expandable Sections
+
+- Collapsible sections for better organization of information
+- Preview counts for sensors to reduce visual clutter
+- Ability to expand sections to see all entities
+
+![expanded](assets/expanded.png)
+
+### Visual Styling
+
+- Consistent with Home Assistant design language
+- Responsive layout that works on both desktop and mobile
+- Clear visual hierarchy for easy reading
 
 ## Installation
 
@@ -62,48 +95,73 @@ lovelace:
 
 ## Usage
 
-![WIP](https://img.shields.io/badge/Work%20In%20Progress-gold?style=for-the-badge&logo=internetcomputer)
-
 Add the card to your dashboard using the UI editor or YAML:
 
 ### Card Editor
 
-Slowly I'm enabling all the features in the card editor. Note that as things get converted to there some yaml settings may move / rename.
+The card is fully configurable in the UI editor. Simply select "Custom: PetKit Device" when adding a new card to your dashboard, then select your PetKit device from the dropdown.
 
 ![editor](assets/editor.png)
 
 ### YAML
 
-This is the most minimal configuarion needed to get started. See below for advanced usage.
+This is the most minimal configuration needed to get started:
 
 ```yaml
-type: custom:petkit-device-cards
-area: living_room
+type: custom:petkit-device
+device_id: YOUR_PETKIT_DEVICE_ID
 ```
 
 The card will automatically:
+
+- Display the device name and model information
+- Organize all entities related to the device into appropriate sections
+- Show collapsible sections for Controls, Configuration, Sensors, and Diagnostics
+- Highlight any detected problems
+
+## Configuration Options
+
+| Name          | Type   | Default      | Description                                                  |
+| ------------- | ------ | ------------ | ------------------------------------------------------------ |
+| device_id     | string | **Required** | The Home Assistant device ID for your PetKit device          |
+| title         | string | Device name  | Optional custom title for the card                           |
+| preview_count | number | All items    | Number of items to preview before showing "Show More" button |
 
 ## Example Configurations
 
 ### Basic Configuration
 
 ```yaml
-type: custom:petkit-device-cards
-area: living_room
+type: custom:petkit-device
+device_id: 1a2b3c4d5e6f7g8h9i0j
 ```
 
-### Full Configuration
+### Custom Title and Preview Count
 
 ```yaml
-type: custom:petkit-device-cards
-area: living_room
+type: custom:petkit-device
+device_id: 1a2b3c4d5e6f7g8h9i0j
+title: Whiskers' Feeder
+preview_count: 3
 ```
 
-For examples, see my HA configuration for my dashboard home page: [01-home.yaml](https://github.com/warmfire540/home-assistant-config-public/blob/home/ui_lovelace_minimalist/dashboard/views/01-home.yaml)
+## Supported PetKit Devices
+
+This card works with all PetKit devices supported by the Home Assistant PetKit integration, including:
+
+- PetKit Fresh Element (Smart Feeder)
+- PetKit Fresh Element Solo (Smart Feeder)
+- PetKit Fresh Element Mini (Smart Feeder)
+- PetKit Pura X (Self-Cleaning Litter Box)
+- PetKit Pura MAX (Self-Cleaning Litter Box)
+- PetKit Eversweet (Smart Water Fountain)
+- And other PetKit devices supported by the integration
 
 ## Project Roadmap
 
 - [x] **`Initial design`**: create initial card design
+- [ ] **`Enhanced customization`**: Add more customization options
+- [ ] **`Status badges`**: Quick status badges for device state
 
 ## Contributing
 
@@ -145,7 +203,6 @@ This project is protected under the MIT License. For more details, refer to the 
 
 - Built using [LitElement](https://lit.dev/)
 - Inspired by Home Assistant's chip design
-- Button-Card was a huge inspo
 - Thanks to all contributors!
 
 [![contributors](https://contrib.rocks/image?repo=homeassistant-extras/petkit-device-cards)](https://github.com{/homeassistant-extras/petkit-device-cards/}graphs/contributors)
@@ -153,8 +210,6 @@ This project is protected under the MIT License. For more details, refer to the 
 [![ko-fi](https://img.shields.io/badge/buy%20me%20a%20coffee-72A5F2?style=for-the-badge&logo=kofi&logoColor=white)](https://ko-fi.com/N4N71AQZQG)
 
 ## Code Quality
-
-Forgive me and my badges..
 
 Stats
 
