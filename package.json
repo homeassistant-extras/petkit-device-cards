@@ -1,6 +1,6 @@
 {
   "name": "petkit-device-cards",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "Patrick Masters",
   "license": "ISC",
   "description": "Custom card Home Assistant to show info about your PetKit devices.",
