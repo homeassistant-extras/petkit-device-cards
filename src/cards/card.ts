@@ -2,6 +2,7 @@ import { hasProblem } from '@delegates/utils/has-problem';
 import { isPetKit } from '@delegates/utils/is-petkit';
 import { getPetKitUnit } from '@delegates/utils/petkit-unit';
 import type { HomeAssistant } from '@hass/types';
+import { pet } from '@html/pet';
 import { renderSection } from '@html/section';
 import { styles } from '@theme/styles';
 import type { Config, PetKitUnit } from '@type/config';
@@ -94,6 +95,13 @@ export class PetKitDevice extends LitElement {
   override render(): TemplateResult | typeof nothing {
     if (!this._unit) {
       return nothing;
+    }
+
+    if (
+      this._unit.model === 'Pet PET' &&
+      this._config.features?.includes('cute_lil_kitty')
+    ) {
+      return pet(this._unit);
     }
 
     const problem = hasProblem(this._unit);

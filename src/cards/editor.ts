@@ -36,6 +36,23 @@ const SCHEMA: HaFormSchema[] = [
       },
     },
   },
+  {
+    name: 'features',
+    label: 'Features',
+    required: false,
+    selector: {
+      select: {
+        multiple: true,
+        mode: 'list',
+        options: [
+          {
+            label: 'Use Pet Portrait',
+            value: 'cute_lil_kitty',
+          },
+        ],
+      },
+    },
+  },
 ];
 
 export class PetKitDeviceEditor extends LitElement {
@@ -81,6 +98,9 @@ export class PetKitDeviceEditor extends LitElement {
 
   private _valueChanged(ev: CustomEvent) {
     const config = ev.detail.value as Config;
+    if (!config.features?.length) {
+      delete config.features;
+    }
 
     // @ts-ignore
     fireEvent(this, 'config-changed', {

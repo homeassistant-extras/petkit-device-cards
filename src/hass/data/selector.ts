@@ -2,7 +2,7 @@
  * https://github.com/home-assistant/frontend/blob/dev/src/data/selector.ts
  */
 
-export type Selector = DeviceSelector | StringSelector;
+export type Selector = DeviceSelector | SelectSelector | StringSelector;
 
 interface DeviceSelectorFilter {
   integration?: string;
@@ -24,6 +24,20 @@ interface EntitySelectorFilter {
   domain?: string | readonly string[];
   device_class?: string | readonly string[];
   supported_features?: number | [number];
+}
+
+export interface SelectSelector {
+  select: {
+    multiple?: boolean;
+    custom_value?: boolean;
+    mode?: 'list' | 'dropdown';
+    options: string[] | SelectOption[];
+  };
+}
+
+export interface SelectOption {
+  value: string;
+  label: string;
 }
 
 export interface StringSelector {

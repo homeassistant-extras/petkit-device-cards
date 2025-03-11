@@ -17,7 +17,13 @@ export interface Config {
 
   /** How many sensors to preview */
   preview_count?: number;
+
+  /** Options to enable disable features **/
+  features?: Features[];
 }
+
+/** Features to enable or disable functionality */
+export type Features = 'cute_lil_kitty';
 
 /**
  * Represents the states of various sensors in a Z-Wave device

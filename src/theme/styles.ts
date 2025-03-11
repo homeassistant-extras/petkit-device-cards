@@ -171,4 +171,20 @@ export const styles = css`
   .percent-gauge-fill.low {
     background-color: var(--error-color, #f44336);
   }
+
+  /* Kitty pics */
+  .portrait {
+    background: none;
+  }
+
+  .portrait img {
+    width: 100%;
+    border-radius: var(--ha-card-border-radius, 12px);
+  }
+
+  .portrait .title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 `;

@@ -3,6 +3,7 @@ import * as problemUtils from '@delegates/utils/has-problem';
 import * as petKitUtils from '@delegates/utils/is-petkit';
 import * as petKitUnitUtils from '@delegates/utils/petkit-unit';
 import type { HomeAssistant } from '@hass/types';
+import * as petModule from '@html/pet';
 import * as sectionRenderer from '@html/section';
 import { fixture } from '@open-wc/testing-helpers';
 import { styles } from '@theme/styles';
@@ -257,6 +258,64 @@ export default () => {
             'Diagnostic',
           ),
         ).to.be.true;
+      });
+
+      it('should render pet component when model is Pet PET and cute_lil_kitty feature is enabled', () => {
+        // Setup mock for pet function
+        const petStub = stub(petModule, 'pet');
+        petStub.returns(html`<div class="mock-pet">Pet Component</div>`);
+
+        // Configure the card with the cute_lil_kitty feature
+        card.setConfig({
+          device_id: 'device_1',
+          features: ['cute_lil_kitty'],
+        });
+
+        // Set up the unit with Pet PET model
+        (card as any)._unit = {
+          ...card['_unit'],
+          model: 'Pet PET',
+        };
+
+        // Render the card
+        const result = card.render();
+
+        // Check that pet() was called with the correct unit
+        expect(petStub.calledOnce).to.be.true;
+        expect(petStub.calledWith(card['_unit'])).to.be.true;
+
+        // Check that the result of pet() was returned
+        expect(result).to.not.equal(nothing);
+
+        // Restore the stub
+        petStub.restore();
+      });
+
+      // Add another test to verify the normal path
+      it('should not render pet component when model is Pet PET but cute_lil_kitty feature is not enabled', () => {
+        // Setup mock for pet function
+        const petStub = stub(petModule, 'pet');
+
+        // Configure the card without the cute_lil_kitty feature
+        card.setConfig({
+          device_id: 'device_1',
+          features: [],
+        });
+
+        // Set up the unit with Pet PET model
+        (card as any)._unit = {
+          ...card['_unit'],
+          model: 'Pet PET',
+        };
+
+        // Render the card
+        card.render();
+
+        // Check that pet() was not called
+        expect(petStub.notCalled).to.be.true;
+
+        // Restore the stub
+        petStub.restore();
       });
     });
 

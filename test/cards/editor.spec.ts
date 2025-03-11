@@ -117,6 +117,23 @@ export default () => {
               },
             },
           },
+          {
+            name: 'features',
+            label: 'Features',
+            required: false,
+            selector: {
+              select: {
+                multiple: true,
+                mode: 'list',
+                options: [
+                  {
+                    label: 'Use Pet Portrait',
+                    value: 'cute_lil_kitty',
+                  },
+                ],
+              },
+            },
+          },
         ]);
       });
     });
@@ -192,6 +209,34 @@ export default () => {
         expect(dispatchStub.firstCall.args[0].detail.config).to.deep.equal({
           device_id: 'device_1',
         });
+      });
+
+      it('should remove features property when features array is empty', () => {
+        const testConfig: Config = {
+          device_id: 'device_1',
+          features: [],
+        };
+        card.setConfig(testConfig);
+
+        // Simulate value-changed event with empty features
+        const detail = {
+          value: {
+            device_id: 'device_2',
+            features: [],
+          },
+        };
+
+        const event = new CustomEvent('value-changed', { detail });
+        card['_valueChanged'](event);
+
+        // Verify event was dispatched with features property removed
+        expect(dispatchStub.calledOnce).to.be.true;
+        expect(dispatchStub.firstCall.args[0].type).to.equal('config-changed');
+        expect(dispatchStub.firstCall.args[0].detail.config).to.deep.equal({
+          device_id: 'device_2',
+        });
+        expect(dispatchStub.firstCall.args[0].detail.config.features).to.be
+          .undefined;
       });
     });
   });

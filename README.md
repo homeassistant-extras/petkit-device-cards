@@ -54,6 +54,12 @@ A custom card for Home Assistant that provides a comprehensive overview of your 
 
 ![problem-detection](assets/problems.png)
 
+### Pet Portraits
+
+With an optional flag, you can showcase your pets instead.
+
+![portraits](assets/portraits.png)
+
 ### Expandable Sections
 
 - Collapsible sections for better organization of information
@@ -126,6 +132,13 @@ The card will automatically:
 | device_id     | string | **Required** | The Home Assistant device ID for your PetKit device          |
 | title         | string | Device name  | Optional custom title for the card                           |
 | preview_count | number | All items    | Number of items to preview before showing "Show More" button |
+| features      | list   | See below    | Optional flags to toggle different features                  |
+
+### Feature Options
+
+| Name           | Type | Description                         |
+| -------------- | ---- | ----------------------------------- |
+| cute_lil_kitty | flag | Show portrait instead if pet device |
 
 ## Example Configurations
 
@@ -143,6 +156,15 @@ type: custom:petkit-device
 device_id: 1a2b3c4d5e6f7g8h9i0j
 title: Whiskers' Feeder
 preview_count: 3
+```
+
+### Pet Portrait
+
+```yaml
+type: custom:petkit-device
+device_id: 1a2b3c4d5e6f7g8h9i0j
+features:
+  - cute_lil_kitty
 ```
 
 ## Supported PetKit Devices
