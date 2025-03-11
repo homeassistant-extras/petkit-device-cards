@@ -1,10 +1,14 @@
-import type { EntityState } from '@type/config';
+import type { EntityInformation } from '@type/config';
 import { html, type TemplateResult } from 'lit';
 import { styleMap } from 'lit/directives/style-map.js';
 
-export const percentBar = (entity: EntityState): TemplateResult => {
+export const percentBar = (entity: EntityInformation): TemplateResult => {
   // Extract the percentage value from the entity state
-  const percentage = Number(entity.state);
+  const state = Number(entity.state);
+  const percentage =
+    entity.translation_key === 'desiccant_left_days'
+      ? (state / 30) * 100
+      : state;
 
   // Determine the color class based on percentage value
   const colorClass =

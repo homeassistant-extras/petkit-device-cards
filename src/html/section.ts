@@ -65,12 +65,14 @@ export const renderSection = (
         className = active ? 'status-error' : 'status-ok';
       }
 
+      const showBar =
+        (entity.attributes.state_class === 'measurement' &&
+          entity.attributes.unit_of_measurement === '%') ||
+        entity.translation_key === 'desiccant_left_days';
+
       return html`<div class="row">
         ${stateContent(hass, entity, className)}
-        ${entity.attributes.state_class === 'measurement' &&
-        entity.attributes.unit_of_measurement === '%'
-          ? percentBar(entity)
-          : nothing}
+        ${showBar ? percentBar(entity) : nothing}
       </div>`;
     })}
     ${needsExpansion

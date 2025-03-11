@@ -14,6 +14,7 @@ export default () => {
       const problemEntity1 = {
         entity_id: 'binary_sensor.petkit_problem1',
         state: 'on',
+        translation_key: undefined,
         attributes: {
           device_class: 'problem',
           friendly_name: 'PetKit Problem 1',
@@ -23,6 +24,7 @@ export default () => {
       const problemEntity2 = {
         entity_id: 'binary_sensor.petkit_problem2',
         state: 'off',
+        translation_key: undefined,
         attributes: {
           device_class: 'problem',
           friendly_name: 'PetKit Problem 2',
@@ -85,6 +87,7 @@ export default () => {
       const additionalEntity1 = {
         entity_id: 'binary_sensor.petkit_problem3',
         state: 'off',
+        translation_key: undefined,
         attributes: {
           device_class: 'problem',
           friendly_name: 'PetKit Problem 3',
@@ -94,6 +97,7 @@ export default () => {
       const additionalEntity2 = {
         entity_id: 'binary_sensor.petkit_problem4',
         state: 'on',
+        translation_key: undefined,
         attributes: {
           device_class: 'problem',
           friendly_name: 'PetKit Problem 4',
@@ -120,6 +124,99 @@ export default () => {
       // Since TypeScript won't allow this at compile time,
       // this is more of a runtime check for robustness
       expect(result).to.be.false;
+    });
+
+    // New tests for the desiccant_left_days translation_key condition
+
+    it('should return true when desiccant_left_days is 0', () => {
+      // Create a desiccant entity with 0 days left
+      const desiccantEntity = {
+        entity_id: 'sensor.petkit_desiccant',
+        state: '0',
+        translation_key: 'desiccant_left_days',
+        attributes: {
+          friendly_name: 'PetKit Desiccant Days Left',
+        },
+      } as any as EntityInformation;
+
+      // Replace the problem entities with just the desiccant entity
+      mockUnit.problemEntities = [desiccantEntity];
+
+      // stateActive should not be called for desiccant_left_days entities
+      stateActiveStub.returns(false);
+
+      const result = hasProblem(mockUnit);
+
+      expect(result).to.be.true;
+      expect(stateActiveStub.called).to.be.false;
+    });
+
+    it('should return false when desiccant_left_days is not 0', () => {
+      // Create a desiccant entity with days left
+      const desiccantEntity = {
+        entity_id: 'sensor.petkit_desiccant',
+        state: '5',
+        translation_key: 'desiccant_left_days',
+        attributes: {
+          friendly_name: 'PetKit Desiccant Days Left',
+        },
+      } as any as EntityInformation;
+
+      // Replace the problem entities with just the desiccant entity
+      mockUnit.problemEntities = [desiccantEntity];
+
+      // stateActive should not be called for desiccant_left_days entities
+      stateActiveStub.returns(true); // This should be ignored for desiccant entity
+
+      const result = hasProblem(mockUnit);
+
+      expect(result).to.be.false;
+      expect(stateActiveStub.called).to.be.false;
+    });
+
+    it('should handle mixed problem entities with desiccant correctly', () => {
+      // Regular problem entity (inactive)
+      const regularProblem = {
+        entity_id: 'binary_sensor.petkit_problem',
+        state: 'off',
+        translation_key: undefined,
+        attributes: {
+          device_class: 'problem',
+          friendly_name: 'PetKit Problem',
+        },
+      } as any as EntityInformation;
+
+      // Desiccant entity with days left (not a problem)
+      const desiccantNotZero = {
+        entity_id: 'sensor.petkit_desiccant',
+        state: '5',
+        translation_key: 'desiccant_left_days',
+        attributes: {
+          friendly_name: 'PetKit Desiccant Days Left',
+        },
+      } as any as EntityInformation;
+
+      mockUnit.problemEntities = [regularProblem, desiccantNotZero];
+      stateActiveStub.returns(false);
+
+      let result = hasProblem(mockUnit);
+      expect(result).to.be.false;
+      expect(stateActiveStub.calledOnce).to.be.true;
+
+      // Now with desiccant at 0 (should be a problem)
+      const desiccantZero = {
+        ...desiccantNotZero,
+        state: '0',
+      };
+
+      mockUnit.problemEntities = [regularProblem, desiccantZero];
+      stateActiveStub.reset();
+      stateActiveStub.returns(false);
+
+      result = hasProblem(mockUnit);
+      expect(result).to.be.true;
+      // stateActive should only be called for the regular problem entity
+      expect(stateActiveStub.calledOnce).to.be.true;
     });
   });
 };

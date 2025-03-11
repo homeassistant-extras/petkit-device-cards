@@ -1,8 +1,6 @@
-import { getDevice } from '@delegates/retrievers/device';
-import { getDeviceEntities } from '@delegates/utils/card-entities';
 import { hasProblem } from '@delegates/utils/has-problem';
 import { isPetKit } from '@delegates/utils/is-petkit';
-import { computeDomain } from '@hass/common/entity/compute_domain';
+import { getPetKitUnit } from '@delegates/utils/petkit-unit';
 import type { HomeAssistant } from '@hass/types';
 import { renderSection } from '@html/section';
 import { styles } from '@theme/styles';
@@ -69,47 +67,9 @@ export class PetKitDevice extends LitElement {
   set hass(hass: HomeAssistant) {
     this._hass = hass;
 
-    const unit: PetKitUnit = {
-      sensors: [],
-      controls: [],
-      diagnostics: [],
-      configurations: [],
-      problemEntities: [],
-    };
+    const unit = getPetKitUnit(hass, this._config);
 
-    const device = getDevice(hass, this._config.device_id);
-    if (!device) {
-      return;
-    }
-
-    unit.name = device.name || 'PetKit Device';
-    unit.model = `${device.model} ${device.model_id}`;
-
-    const entities = getDeviceEntities(hass, device.id, device.name);
-    if (entities.length) {
-      entities.forEach((entity) => {
-        if (entity.category === 'diagnostic') {
-          unit.diagnostics.push(entity);
-        } else if (entity.category === 'config') {
-          unit.configurations.push(entity);
-        } else {
-          // track our problem entities
-          if (entity.attributes.device_class === 'problem') {
-            unit.problemEntities.push(entity);
-          }
-
-          const domain = computeDomain(entity.entity_id);
-          if (['text', 'button', 'switch', 'select'].includes(domain)) {
-            unit.controls.push(entity);
-          } else {
-            // everything else is a sensor
-            unit.sensors.push(entity);
-          }
-        }
-      });
-    }
-
-    if (!equal(unit, this._unit)) {
+    if (unit && !equal(unit, this._unit)) {
       this._unit = unit;
     }
   }

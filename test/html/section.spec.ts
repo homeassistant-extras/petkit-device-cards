@@ -35,6 +35,13 @@ export default () => {
             unit_of_measurement: '%',
           },
         },
+        'sensor.desiccant_left': {
+          entity_id: 'sensor.desiccant_left',
+          state: '15',
+          attributes: {
+            friendly_name: 'Desiccant Left',
+          },
+        },
         'light.test_light': {
           entity_id: 'light.test_light',
           state: 'on',
@@ -57,6 +64,7 @@ export default () => {
         {
           entity_id: 'sensor.test_percentage',
           state: '50',
+          translation_key: undefined,
           attributes: {
             friendly_name: 'Test Percentage',
             state_class: 'measurement',
@@ -64,21 +72,31 @@ export default () => {
           },
         } as any as EntityInformation,
         {
+          entity_id: 'sensor.desiccant_left',
+          state: '15',
+          translation_key: 'desiccant_left_days',
+          attributes: {
+            friendly_name: 'Desiccant Left',
+          },
+        } as any as EntityInformation,
+        {
           entity_id: 'light.test_light',
           state: 'on',
+          translation_key: undefined,
           attributes: {
             friendly_name: 'Test Light',
           },
-        },
+        } as any as EntityInformation,
         {
           entity_id: 'binary_sensor.problem',
           state: 'on',
+          translation_key: undefined,
           attributes: {
             friendly_name: 'Problem Sensor',
             device_class: 'problem',
           },
-        },
-      ] as EntityInformation[];
+        } as any as EntityInformation,
+      ];
 
       // Mock Home Assistant
       mockHass = {
@@ -87,7 +105,7 @@ export default () => {
 
       // Mock config
       mockConfig = {
-        preview_count: 2,
+        preview_count: 5,
       } as Config;
 
       // Mock element with expandedSections property
@@ -242,7 +260,7 @@ export default () => {
 
       const showMoreElement = el.querySelector('.show-more');
       expect(showMoreElement).to.exist;
-      expect(showMoreElement?.textContent?.trim()).to.include('Show 2 more...'); // 3 entities - 1 preview = 2 more
+      expect(showMoreElement?.textContent?.trim()).to.include('Show 3 more...'); // 4 entities - 1 preview = 2 more
     });
 
     it('should not render "Show more" text when expanded', async () => {
@@ -322,7 +340,7 @@ export default () => {
       await fixture(result as TemplateResult);
 
       // Should be called only for the percentage entity
-      expect(percentBarStub.callCount).to.equal(1);
+      expect(percentBarStub.callCount).to.equal(2);
       expect(percentBarStub.firstCall.args[0].entity_id).to.equal(
         'sensor.test_percentage',
       );
@@ -372,6 +390,56 @@ export default () => {
 
       // Check that the expanded state was toggled
       expect(mockElement.expandedSections['Test Section']).to.be.true;
+    });
+
+    // New test for the desiccant_left_days translation_key condition
+    it('should show percentBar for entities with desiccant_left_days translation_key', async () => {
+      const result = renderSection(
+        mockElement,
+        mockHass,
+        mockConfig,
+        'Test Section',
+        mockEntities,
+      );
+
+      await fixture(result as TemplateResult);
+
+      // Verify percentBar was called for both percentage entity and desiccant entity
+      expect(percentBarStub.callCount).to.equal(2);
+
+      // First call should be for the percentage sensor
+      expect(percentBarStub.getCall(0).args[0].entity_id).to.equal(
+        'sensor.test_percentage',
+      );
+
+      // Second call should be for the desiccant entity with translation_key
+      expect(percentBarStub.getCall(1).args[0].entity_id).to.equal(
+        'sensor.desiccant_left',
+      );
+      expect(percentBarStub.getCall(1).args[0].translation_key).to.equal(
+        'desiccant_left_days',
+      );
+    });
+
+    it('should not show percentBar for entities without proper conditions', async () => {
+      // Create a new array with only entities that shouldn't display percent bars
+      const nonPercentEntities = [
+        mockEntities[2], // light.test_light
+        mockEntities[3], // binary_sensor.problem
+      ];
+
+      const result = renderSection(
+        mockElement,
+        mockHass,
+        mockConfig,
+        'Test Section',
+        nonPercentEntities,
+      );
+
+      await fixture(result as TemplateResult);
+
+      // Verify percentBar was not called for these entities
+      expect(percentBarStub.callCount).to.equal(0);
     });
   });
 };

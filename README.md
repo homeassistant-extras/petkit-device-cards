@@ -157,6 +157,14 @@ This card works with all PetKit devices supported by the Home Assistant PetKit i
 - PetKit Eversweet (Smart Water Fountain)
 - And other PetKit devices supported by the integration
 
+This card is tightly coupled to the PetKit Integration here, by [@Jezza34000](https://github.com/Jezza34000):
+
+<p align="center">
+   <a href="https://github.com/Jezza34000/homeassistant_petkit">
+      <img src="assets/logo.png" alt="drawing" width="200"/>
+   </a>
+</p>
+
 ## Project Roadmap
 
 - [x] **`Initial design`**: create initial card design

@@ -1,81 +1,37 @@
 import { PetKitDevice } from '@/cards/card';
-import * as deviceRetriever from '@delegates/retrievers/device';
-import * as cardEntities from '@delegates/utils/card-entities';
 import * as problemUtils from '@delegates/utils/has-problem';
 import * as petKitUtils from '@delegates/utils/is-petkit';
-import * as domainUtils from '@hass/common/entity/compute_domain';
+import * as petKitUnitUtils from '@delegates/utils/petkit-unit';
 import type { HomeAssistant } from '@hass/types';
 import * as sectionRenderer from '@html/section';
 import { fixture } from '@open-wc/testing-helpers';
 import { styles } from '@theme/styles';
-import type { EntityState } from '@type/config';
+import type { PetKitUnit } from '@type/config';
 import { expect } from 'chai';
 import { html, nothing, type TemplateResult } from 'lit';
 import { stub } from 'sinon';
 import { version } from '../../package.json';
-/**
- * Creats a fake state entity
- * @param domain
- * @param name
- * @param state
- * @param attributes
- * @returns
- */
-export const s = (
-  domain: string,
-  name: string,
-  state: string = 'on',
-  attributes = {},
-): EntityState => {
-  return {
-    entity_id: `${domain}.${name}`,
-    state: state,
-    attributes: attributes,
-  };
-};
 
 export default () => {
   describe('card.ts', () => {
     let card: PetKitDevice;
     let mockHass: HomeAssistant;
+    let mockUnit: PetKitUnit;
     let consoleInfoStub: sinon.SinonStub;
-    let getDeviceStub: sinon.SinonStub;
-    let getDeviceEntitiesStub: sinon.SinonStub;
     let hasProblemStub: sinon.SinonStub;
     let isPetKitStub: sinon.SinonStub;
-    let computeDomainStub: sinon.SinonStub;
+    let getPetKitUnitStub: sinon.SinonStub;
     let renderSectionStub: sinon.SinonStub;
 
     beforeEach(() => {
       consoleInfoStub = stub(console, 'info');
-      getDeviceStub = stub(deviceRetriever, 'getDevice');
-      getDeviceEntitiesStub = stub(cardEntities, 'getDeviceEntities');
       hasProblemStub = stub(problemUtils, 'hasProblem');
       isPetKitStub = stub(petKitUtils, 'isPetKit');
-      computeDomainStub = stub(domainUtils, 'computeDomain');
+      getPetKitUnitStub = stub(petKitUnitUtils, 'getPetKitUnit');
       renderSectionStub = stub(sectionRenderer, 'renderSection');
 
       card = new PetKitDevice();
       mockHass = {
-        states: {
-          'sensor.petkit_battery': s('sensor', 'petkit_battery', '75', {
-            friendly_name: 'PetKit Battery Level',
-            device_class: 'battery',
-          }),
-          'switch.petkit_power': s('switch', 'petkit_power', 'on', {
-            friendly_name: 'PetKit Power',
-          }),
-          'sensor.petkit_problem': s('sensor', 'petkit_problem', 'off', {
-            friendly_name: 'PetKit Problem',
-            device_class: 'problem',
-          }),
-          'text.petkit_config': s('text', 'petkit_config', 'default', {
-            friendly_name: 'PetKit Configuration',
-          }),
-          'sensor.petkit_diagnostic': s('sensor', 'petkit_diagnostic', 'ok', {
-            friendly_name: 'PetKit Diagnostic',
-          }),
-        },
         devices: {
           device_1: {
             id: 'device_1',
@@ -84,67 +40,63 @@ export default () => {
             model_id: 'Plus Pro',
           },
         },
-        entities: {
-          'sensor.petkit_battery': {
-            device_id: 'device_1',
-            entity_id: 'sensor.petkit_battery',
-            category: null,
-          },
-          'switch.petkit_power': {
-            device_id: 'device_1',
-            entity_id: 'switch.petkit_power',
-            category: null,
-          },
-          'sensor.petkit_problem': {
-            device_id: 'device_1',
-            entity_id: 'sensor.petkit_problem',
-            category: null,
-          },
-          'text.petkit_config': {
-            device_id: 'device_1',
-            entity_id: 'text.petkit_config',
-            category: 'config',
-          },
-          'sensor.petkit_diagnostic': {
-            device_id: 'device_1',
-            entity_id: 'sensor.petkit_diagnostic',
-            category: 'diagnostic',
-          },
-        },
       } as any as HomeAssistant;
 
+      // Create mock PetKit unit
+      mockUnit = {
+        name: 'PetKit Feeder',
+        model: 'Feeder Plus Pro',
+        sensors: [
+          {
+            entity_id: 'sensor.petkit_battery',
+            category: undefined,
+            translation_key: undefined,
+            state: '75',
+            attributes: { device_class: 'battery' },
+          },
+        ],
+        controls: [
+          {
+            entity_id: 'switch.petkit_power',
+            category: undefined,
+            translation_key: undefined,
+            state: 'on',
+            attributes: {},
+          },
+        ],
+        diagnostics: [
+          {
+            entity_id: 'sensor.petkit_diagnostic',
+            category: 'diagnostic',
+            translation_key: undefined,
+            state: 'ok',
+            attributes: {},
+          },
+        ],
+        configurations: [
+          {
+            entity_id: 'text.petkit_config',
+            category: 'config',
+            translation_key: undefined,
+            state: 'default',
+            attributes: {},
+          },
+        ],
+        problemEntities: [
+          {
+            entity_id: 'sensor.petkit_problem',
+            category: undefined,
+            translation_key: undefined,
+            state: 'off',
+            attributes: { device_class: 'problem' },
+          },
+        ],
+      };
+
       // Configure stubs
-      getDeviceStub.returns(mockHass.devices.device_1);
-      getDeviceEntitiesStub.returns([
-        {
-          entity_id: 'sensor.petkit_battery',
-          attributes: { device_class: 'battery' },
-          category: null,
-        },
-        {
-          entity_id: 'switch.petkit_power',
-          attributes: {},
-          category: null,
-        },
-        {
-          entity_id: 'sensor.petkit_problem',
-          attributes: { device_class: 'problem' },
-          category: null,
-        },
-        {
-          entity_id: 'text.petkit_config',
-          attributes: {},
-          category: 'config',
-        },
-        {
-          entity_id: 'sensor.petkit_diagnostic',
-          attributes: {},
-          category: 'diagnostic',
-        },
-      ]);
       hasProblemStub.returns(false);
       isPetKitStub.returns(true);
-      computeDomainStub.callsFake((entity_id) => entity_id.split('.')[0]);
+      getPetKitUnitStub.returns(mockUnit);
       renderSectionStub.returns(html`<div class="section">Mock Section</div>`);
 
       card.setConfig({ device_id: 'device_1' });
@@ -153,11 +105,9 @@ export default () => {
 
     afterEach(() => {
       consoleInfoStub.restore();
-      getDeviceStub.restore();
-      getDeviceEntitiesStub.restore();
       hasProblemStub.restore();
       isPetKitStub.restore();
-      computeDomainStub.restore();
+      getPetKitUnitStub.restore();
       renderSectionStub.restore();
     });
 
@@ -192,28 +142,36 @@ export default () => {
     });
 
     describe('hass property setter', () => {
-      it('should update unit when hass changes', () => {
-        expect(card['_unit']).to.exist;
-        expect(card['_unit'].name).to.equal('PetKit Feeder');
-        expect(card['_unit'].model).to.equal('Feeder Plus Pro');
-      });
-
-      it('should categorize entities correctly', () => {
-        expect(card['_unit'].sensors).to.have.length(2);
-        expect(card['_unit'].controls).to.have.length(1);
-        expect(card['_unit'].diagnostics).to.have.length(1);
-        expect(card['_unit'].configurations).to.have.length(1);
-        expect(card['_unit'].problemEntities).to.have.length(1);
-      });
-
-      it('should handle missing device gracefully', () => {
-        getDeviceStub.returns(undefined);
+      it('should call getPetKitUnit with hass and config', () => {
         card.hass = mockHass as HomeAssistant;
-        // Should not throw an error
+        expect(getPetKitUnitStub.calledWith(mockHass, card['_config'])).to.be
+          .true;
       });
 
-      it('should not update unit if identical', () => {
+      it('should update unit when getPetKitUnit returns a new value', () => {
+        const newUnit = { ...mockUnit, name: 'Updated Device' };
+        getPetKitUnitStub.returns(newUnit);
+        card.hass = mockHass as HomeAssistant;
+        expect(card['_unit']).to.equal(newUnit);
+      });
+
+      it('should not update unit if getPetKitUnit returns identical data', () => {
+        // First call to set initial unit
+        card.hass = mockHass as HomeAssistant;
         const originalUnit = card['_unit'];
+
+        // Second call should not update unit since it's identical
+        card.hass = mockHass as HomeAssistant;
+        expect(card['_unit']).to.equal(originalUnit);
+      });
+
+      it('should not update unit if getPetKitUnit returns undefined', () => {
+        // First set a valid unit
+        card.hass = mockHass as HomeAssistant;
+        const originalUnit = card['_unit'];
+
+        // Then test with undefined return value
+        getPetKitUnitStub.returns(undefined);
         card.hass = mockHass as HomeAssistant;
         expect(card['_unit']).to.equal(originalUnit);
       });
