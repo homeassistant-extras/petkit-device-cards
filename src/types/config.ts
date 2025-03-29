@@ -32,6 +32,7 @@ export interface PetKitUnit {
   /** The name of the device */
   name?: string;
 
+  /** The model of the device */
   model?: string;
 
   /** Entities used to control the unit */

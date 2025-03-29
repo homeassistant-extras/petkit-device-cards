@@ -138,7 +138,7 @@ The card will automatically:
 
 | Name           | Type | Description                         |
 | -------------- | ---- | ----------------------------------- |
-| cute_lil_kitty | flag | Show portrait instead if pet device |
+| cute_lil_kitty | flag | Show portrait instead of pet device |
 
 ## Example Configurations
 
@@ -199,6 +199,7 @@ This card is tightly coupled to the PetKit Integration here, by [@Jezza34000](ht
 - **🐛 [Report Issues](https://github.com/homeassistant-extras/petkit-device-cards/issues)**: Submit bugs found or log feature requests for the `petkit-device-cards` project.
 - **💡 [Submit Pull Requests](https://github.com/homeassistant-extras/petkit-device-cards/blob/main/CONTRIBUTING.md)**: Review open PRs, and submit your own PRs.
 - **📣 [Check out discord](https://discord.gg/F28wupKC)**: Need further help, have ideas, want to chat?
+- **🃏 [Check out my other cards!](https://github.com/orgs/homeassistant-extras/repositories)** Maybe you have an integration that I made cards for.
 
 <details closed>
 <summary>Contributing Guidelines</summary>
