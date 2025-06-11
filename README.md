@@ -242,6 +242,8 @@ This project is protected under the MIT License. For more details, refer to the 
 
 ## Code Quality
 
+Forgive me and my badges..
+
 Stats
 
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=homeassistant-extras_petkit-device-cards&metric=bugs)](https://sonarcloud.io/summary/new_code?id=homeassistant-extras_petkit-device-cards)
@@ -263,10 +265,17 @@ Ratings
 
 ### Main
 
-[![Bump & Tag](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/push.yml/badge.svg?branch=main)](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/push.yml)
+[![CodeQL](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/github-code-scanning/codeql/badge.svg?branch=main)](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/github-code-scanning/codeql)
+[![Dependabot Updates](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/dependabot/dependabot-updates/badge.svg?branch=main)](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/dependabot/dependabot-updates)
+[![Main Branch CI](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/main-ci.yaml/badge.svg?branch=main)](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/main-ci.yaml)
 [![Fast Forward Check](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/pull_request.yaml/badge.svg?branch=main)](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/pull_request.yaml)
 
 ### Release
 
-[![Bump & Tag](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/push.yml/badge.svg?branch=release)](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/push.yml)
+[![Release & Deploy](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/release-cd.yaml/badge.svg)](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/release-cd.yaml)
 [![Merge](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/merge.yaml/badge.svg)](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/merge.yaml)
+
+### Other
+
+[![Issue assignment](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/assign.yaml/badge.svg)](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/assign.yaml)
+[![Manual Release](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/manual-release.yaml/badge.svg)](https://github.com/homeassistant-extras/petkit-device-cards/actions/workflows/manual-release.yaml)
