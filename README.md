@@ -27,6 +27,9 @@
 	<img src="https://img.shields.io/badge/GitHub%20Actions-2088FF.svg?style=for-the-badge&logo=GitHub-Actions&logoColor=white" alt="GitHub%20Actions">
 	<img src="https://img.shields.io/badge/Lit-324FFF.svg?style=for-the-badge&logo=Lit&logoColor=white" alt="Lit">
 </p>
+
+> **💡 Looking for more features?** Check out my **[Device Card](https://github.com/homeassistant-extras/device-card)** which does everything this card does plus many many more customizable features!
+
 <br>
 
 ## Overview
