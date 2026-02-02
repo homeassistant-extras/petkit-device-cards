@@ -2,7 +2,13 @@
  * https://github.com/home-assistant/frontend/blob/dev/src/data/selector.ts
  */
 
-export type Selector = DeviceSelector | SelectSelector | StringSelector;
+import type { UiAction } from '@hass/panels/lovelace/components/hui-action-editor';
+
+export type Selector =
+  | DeviceSelector
+  | SelectSelector
+  | StringSelector
+  | UiActionSelector;
 
 interface DeviceSelectorFilter {
   integration?: string;
@@ -59,4 +65,11 @@ export interface StringSelector {
       | 'color';
     suffix?: string;
   };
+}
+
+export interface UiActionSelector {
+  ui_action: {
+    actions?: UiAction[];
+    default_action?: UiAction;
+  } | null;
 }

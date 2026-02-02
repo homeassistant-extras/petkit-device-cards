@@ -30,7 +30,7 @@ export const getPetKitUnit = (
   unit.name = device.name || 'PetKit Device';
   unit.model = `${device.model} ${device.model_id}`;
 
-  const entities = getDeviceEntities(hass, device.id, device.name);
+  const entities = getDeviceEntities(hass, config, device.id, device.name);
   entities.forEach((entity) => {
     if (entity.category === 'diagnostic') {
       unit.diagnostics.push(entity);

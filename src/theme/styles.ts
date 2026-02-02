@@ -136,6 +136,7 @@ export const styles = css`
   /* Container for a row */
   .row {
     position: relative;
+    cursor: pointer;
   }
 
   /* Style for the percentage bar that goes below the state-card-content */

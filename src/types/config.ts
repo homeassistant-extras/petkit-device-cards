@@ -4,6 +4,7 @@
  */
 
 import type { EntityCategory } from '@hass/data/entity_registry';
+import type { ActionConfig } from '@hass/data/lovelace/config/action';
 
 /**
  * Configuration settings for entity display and behavior within Home Assistant.
@@ -20,6 +21,15 @@ export interface Config {
 
   /** Options to enable disable features **/
   features?: Features[];
+
+  /** Action to perform on tap */
+  tap_action?: ActionConfig;
+
+  /** Action to perform on hold */
+  hold_action?: ActionConfig;
+
+  /** Action to perform on double tap */
+  double_tap_action?: ActionConfig;
 }
 
 /** Features to enable or disable functionality */
@@ -57,6 +67,23 @@ export interface EntityInformation extends EntityState {
 
   /** Translation key */
   translation_key: string | undefined;
+
+  /** The entity configuration */
+  config?: EntityConfig;
+}
+
+/**
+ * Configuration for an individual entity including display and interaction options.
+ */
+export interface EntityConfig {
+  /** Action to perform on tap */
+  tap_action?: ActionConfig;
+
+  /** Action to perform on hold */
+  hold_action?: ActionConfig;
+
+  /** Action to perform on double tap */
+  double_tap_action?: ActionConfig;
 }
 
 export interface EntityState {

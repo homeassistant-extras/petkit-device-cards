@@ -1,10 +1,8 @@
 import type { PetKitDevice } from '@cards/card';
-import { stateActive } from '@hass/common/entity/state_active';
 import type { HomeAssistant } from '@hass/types';
 import type { Config, EntityInformation } from '@type/config';
 import { html, nothing, type TemplateResult } from 'lit';
-import { percentBar } from './percent';
-import { stateContent } from './state-content';
+import { row } from './row';
 
 /**
  * Toggles the expanded state of a section
@@ -56,25 +54,7 @@ export const renderSection = (
           </div>`
         : nothing}
     </div>
-    ${displayEntities.map((entity) => {
-      let className: string | undefined;
-
-      if (entity.attributes.device_class === 'problem') {
-        // add color to problem class based on state
-        const active = stateActive(entity);
-        className = active ? 'status-error' : 'status-ok';
-      }
-
-      const showBar =
-        (entity.attributes.state_class === 'measurement' &&
-          entity.attributes.unit_of_measurement === '%') ||
-        entity.translation_key === 'desiccant_left_days';
-
-      return html`<div class="row">
-        ${stateContent(hass, entity, className)}
-        ${showBar ? percentBar(entity) : nothing}
-      </div>`;
-    })}
+    ${displayEntities.map((entity) => row(hass, entity, element))}
     ${needsExpansion
       ? html`<div class="section-footer">
           ${isExpanded

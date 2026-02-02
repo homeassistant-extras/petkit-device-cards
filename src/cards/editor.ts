@@ -5,6 +5,42 @@ import type { Config } from '@type/config';
 import { html, LitElement, nothing, type TemplateResult } from 'lit';
 import { state } from 'lit/decorators.js';
 
+/**
+ * Common interactions schema used in petkit device card
+ * Defines the configuration options for tap, hold, and double tap actions
+ * that control card behavior when users interact with it
+ */
+const INTERACTIONS_SCHEMA: HaFormSchema = {
+  name: 'interactions',
+  label: 'Interactions',
+  type: 'expandable',
+  flatten: true,
+  icon: 'mdi:gesture-tap',
+  schema: [
+    {
+      name: 'tap_action',
+      label: 'Tap Action',
+      selector: {
+        ui_action: {},
+      },
+    },
+    {
+      name: 'hold_action',
+      label: 'Hold Action',
+      selector: {
+        ui_action: {},
+      },
+    },
+    {
+      name: 'double_tap_action',
+      label: 'Double Tap Action',
+      selector: {
+        ui_action: {},
+      },
+    },
+  ],
+};
+
 const SCHEMA: HaFormSchema[] = [
   {
     name: 'device_id',
@@ -32,7 +68,7 @@ const SCHEMA: HaFormSchema[] = [
     label: 'Preview Count',
     selector: {
       text: {
-        type: 'number',
+        type: 'number' as const,
       },
     },
   },
@@ -43,7 +79,7 @@ const SCHEMA: HaFormSchema[] = [
     selector: {
       select: {
         multiple: true,
-        mode: 'list',
+        mode: 'list' as const,
         options: [
           {
             label: 'Use Pet Portrait',
@@ -53,6 +89,7 @@ const SCHEMA: HaFormSchema[] = [
       },
     },
   },
+  INTERACTIONS_SCHEMA,
 ];
 
 export class PetKitDeviceEditor extends LitElement {

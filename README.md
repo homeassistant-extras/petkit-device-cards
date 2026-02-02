@@ -71,6 +71,14 @@ With an optional flag, you can showcase your pets instead.
 
 ![expanded](assets/expanded.png)
 
+### Entity Interactions
+
+- Click any sensor, control, or diagnostic entity to view more information
+- Default action opens the more-info dialog when tapping or holding an entity
+- Configure custom actions for tap, hold, and double-tap interactions
+- Actions include navigating to other views, calling services, or opening more-info dialogs
+- Actions can be configured in both YAML and the visual editor
+
 ### Visual Styling
 
 - Consistent with Home Assistant design language
@@ -130,12 +138,15 @@ The card will automatically:
 
 ## Configuration Options
 
-| Name          | Type   | Default      | Description                                                  |
-| ------------- | ------ | ------------ | ------------------------------------------------------------ |
-| device_id     | string | **Required** | The Home Assistant device ID for your PetKit device          |
-| title         | string | Device name  | Optional custom title for the card                           |
-| preview_count | number | All items    | Number of items to preview before showing "Show More" button |
-| features      | list   | See below    | Optional flags to toggle different features                  |
+| Name              | Type   | Default      | Description                                                  |
+| ----------------- | ------ | ------------ | ------------------------------------------------------------ |
+| device_id         | string | **Required** | The Home Assistant device ID for your PetKit device          |
+| title             | string | Device name  | Optional custom title for the card                           |
+| preview_count     | number | All items    | Number of items to preview before showing "Show More" button |
+| features          | list   | See below    | Optional flags to toggle different features                  |
+| tap_action        | object | more-info    | Action to perform when tapping a sensor                      |
+| hold_action       | object | more-info    | Action to perform when holding a sensor                      |
+| double_tap_action | object | _none_       | Action when double-tapping a sensor                          |
 
 ### Feature Options
 
@@ -169,6 +180,31 @@ device_id: 1a2b3c4d5e6f7g8h9i0j
 features:
   - cute_lil_kitty
 ```
+
+### With Custom Actions
+
+Configure custom actions for sensor interactions. By default, tapping or holding a sensor opens the more-info dialog.
+
+```yaml
+type: custom:petkit-device
+device_id: 1a2b3c4d5e6f7g8h9i0j
+tap_action:
+  action: more-info
+hold_action:
+  action: navigate
+  navigation_path: /lovelace/petkit-details
+double_tap_action:
+  action: call-service
+  service: homeassistant.reload_config_entry
+```
+
+Available actions include:
+
+- `more-info` - Show entity details dialog (default for tap and hold)
+- `navigate` - Navigate to a different view
+- `toggle` - Toggle entity state
+- `call-service` - Call a service
+- `none` - Disable the action
 
 ## Supported PetKit Devices
 
