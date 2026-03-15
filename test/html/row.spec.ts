@@ -1,5 +1,3 @@
-import * as actionHandlerModule from '@/delegates/action-handler-delegate';
-import type { PetKitDevice } from '@cards/card';
 import * as stateActiveModule from '@hass/common/entity/state_active';
 import type { HomeAssistant } from '@hass/types';
 import * as percentBarModule from '@html/percent';
@@ -12,18 +10,13 @@ import { stub, type SinonStub } from 'sinon';
 
 describe('row.ts', () => {
   let mockHass: HomeAssistant;
-  let mockElement: PetKitDevice;
   let mockEntity: EntityInformation;
   let stateContentStub: SinonStub;
   let percentBarStub: SinonStub;
   let stateActiveStub: SinonStub;
-  let actionHandlerStub: SinonStub;
 
   beforeEach(() => {
     mockHass = {} as HomeAssistant;
-    mockElement = {
-      expandedSections: {},
-    } as PetKitDevice;
 
     mockEntity = {
       entity_id: 'sensor.test',
@@ -40,28 +33,23 @@ describe('row.ts', () => {
       },
     } as EntityInformation;
 
-    stateContentStub = stub(stateContentModule, 'stateContent').returns(
+    stateContentStub = stub(stateContentModule, 'stateContent').resolves(
       html`<div>Test Content</div>` as any,
     );
     percentBarStub = stub(percentBarModule, 'percentBar').returns(
       html`<div>Percent Bar</div>`,
     );
     stateActiveStub = stub(stateActiveModule, 'stateActive').returns(false);
-    actionHandlerStub = stub(actionHandlerModule, 'actionHandler').returns({
-      bind: () => {}, // Mock the bind method
-      handleAction: () => {}, // Add any other methods that might be called
-    });
   });
 
   afterEach(() => {
     stateContentStub.restore();
     percentBarStub.restore();
     stateActiveStub.restore();
-    actionHandlerStub.restore();
   });
 
   it('should render row with state content', async () => {
-    const result = row(mockHass, mockEntity, mockElement);
+    const result = await row(mockHass, mockEntity);
     const el = await fixture(result);
 
     expect(stateContentStub.calledOnce).to.be.true;
@@ -73,7 +61,7 @@ describe('row.ts', () => {
   });
 
   it('should show percent bar for percentage entities', async () => {
-    const result = row(mockHass, mockEntity, mockElement);
+    const result = await row(mockHass, mockEntity);
     await fixture(result);
 
     expect(percentBarStub.calledOnce).to.be.true;
@@ -83,7 +71,7 @@ describe('row.ts', () => {
     stateActiveStub.returns(true);
     mockEntity.attributes.device_class = 'problem';
 
-    const result = row(mockHass, mockEntity, mockElement);
+    const result = await row(mockHass, mockEntity);
     const el = await fixture(result);
 
     expect(stateActiveStub.calledOnce).to.be.true;
@@ -95,7 +83,7 @@ describe('row.ts', () => {
     stateActiveStub.returns(false);
     mockEntity.attributes.device_class = 'problem';
 
-    const result = row(mockHass, mockEntity, mockElement);
+    const result = await row(mockHass, mockEntity);
     const el = await fixture(result);
 
     expect(el.classList.contains('row')).to.be.true;

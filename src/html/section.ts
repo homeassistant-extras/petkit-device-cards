@@ -2,6 +2,7 @@ import type { PetKitDevice } from '@cards/card';
 import type { HomeAssistant } from '@hass/types';
 import type { Config, EntityInformation } from '@type/config';
 import { html, nothing, type TemplateResult } from 'lit';
+import { repeat } from 'lit/directives/repeat.js';
 import { row } from './row';
 
 /**
@@ -22,13 +23,13 @@ const toggleSection = (
   };
 };
 
-export const renderSection = (
+export const renderSection = async (
   element: PetKitDevice,
   hass: HomeAssistant,
   config: Config,
   title: string,
   entities: EntityInformation[],
-): TemplateResult | typeof nothing => {
+): Promise<TemplateResult | typeof nothing> => {
   if (!entities || entities.length === 0) {
     return nothing;
   }
@@ -38,6 +39,10 @@ export const renderSection = (
   const isExpanded = element.expandedSections[title] || false;
   const displayEntities =
     needsExpansion && !isExpanded ? entities.slice(0, size) : entities;
+
+  const rows = await Promise.all(
+    displayEntities.map((entity) => row(hass, entity)),
+  );
 
   // Determine section class based on expanded state and number of items
   const sectionClass = `section ${isExpanded ? 'expanded' : ''} ${!needsExpansion ? 'few-items' : ''}`;
@@ -54,7 +59,11 @@ export const renderSection = (
           </div>`
         : nothing}
     </div>
-    ${displayEntities.map((entity) => row(hass, entity, element))}
+    ${repeat(
+      displayEntities,
+      (entity) => entity.entity_id,
+      (entity, index) => rows[index],
+    )}
     ${needsExpansion
       ? html`<div class="section-footer">
           ${isExpanded

@@ -1,14 +1,61 @@
 import type { HomeAssistant } from '@hass/types';
 import type { EntityInformation } from '@type/config';
-import { html } from 'lit';
+import { html, type TemplateResult } from 'lit';
 
-export const stateContent = (
+// Extend the global object to include loadCardHelpers (Home Assistant provides this)
+declare global {
+  // eslint-disable-next-line no-var
+  var loadCardHelpers: () => Promise<{
+    createRowElement: (config: LovelaceRowConfig) => LovelaceRowElement;
+  }>;
+}
+
+// Lovelace row configuration interface
+interface LovelaceRowConfig {
+  entity: string;
+  name?: string;
+  [key: string]: any;
+}
+
+// Interface for the row element returned by createRowElement
+interface LovelaceRowElement extends HTMLElement {
+  hass?: any;
+}
+
+/**
+ * Renders a row element using Home Assistant's createRowElement
+ * @param {HomeAssistant} hass - The Home Assistant instance
+ * @param {EntityInformation} entity - The entity to render
+ * @param {string | undefined} className - Optional class name for styling
+ * @returns {Promise<TemplateResult>} A lit-html template for the row element
+ */
+export const stateContent = async (
   hass: HomeAssistant,
   entity: EntityInformation,
   className: string | undefined,
-) =>
-  html`<state-card-content
-    .hass=${hass}
-    .stateObj=${entity}
-    class="${className}"
-  ></state-card-content>`;
+): Promise<TemplateResult> => {
+  // Load the card helpers
+  const helpers = await globalThis.loadCardHelpers();
+
+  // Create the row configuration - HA's row handles actions using our config.
+  const config: LovelaceRowConfig = {
+    entity: entity.entity_id,
+    // our name removes the device name from the friendly name
+    name: entity.attributes.friendly_name,
+    // add our actions
+    ...entity.config,
+  };
+
+  // Create the row element
+  const element = helpers.createRowElement(config);
+
+  // Set the hass property
+  element.hass = hass;
+
+  // Apply the class name if provided
+  if (className) {
+    element.className = className;
+  }
+
+  return html`${element}`;
+};

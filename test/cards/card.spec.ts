@@ -5,13 +5,13 @@ import * as petKitUnitUtils from '@delegates/utils/petkit-unit';
 import type { HomeAssistant } from '@hass/types';
 import * as petModule from '@html/pet';
 import * as sectionRenderer from '@html/section';
+import { Task } from '@lit/task';
 import { fixture } from '@open-wc/testing-helpers';
 import { styles } from '@theme/styles';
 import type { PetKitUnit } from '@type/config';
 import { expect } from 'chai';
 import { html, nothing, type TemplateResult } from 'lit';
 import { stub } from 'sinon';
-import { version } from '../../package.json';
 
 describe('card.ts', () => {
   let card: PetKitDevice;
@@ -22,6 +22,7 @@ describe('card.ts', () => {
   let isPetKitStub: sinon.SinonStub;
   let getPetKitUnitStub: sinon.SinonStub;
   let renderSectionStub: sinon.SinonStub;
+  let taskRenderStub: sinon.SinonStub;
 
   beforeEach(() => {
     consoleInfoStub = stub(console, 'info');
@@ -29,6 +30,7 @@ describe('card.ts', () => {
     isPetKitStub = stub(petKitUtils, 'isPetKit');
     getPetKitUnitStub = stub(petKitUnitUtils, 'getPetKitUnit');
     renderSectionStub = stub(sectionRenderer, 'renderSection');
+    taskRenderStub = stub(Task.prototype, 'render');
 
     card = new PetKitDevice();
     mockHass = {
@@ -97,7 +99,15 @@ describe('card.ts', () => {
     hasProblemStub.returns(false);
     isPetKitStub.returns(true);
     getPetKitUnitStub.returns(mockUnit);
-    renderSectionStub.returns(html`<div class="section">Mock Section</div>`);
+    renderSectionStub.resolves(html`<div class="section">Mock Section</div>`);
+    taskRenderStub.returns(
+      html`
+        <div class="section">Mock Section</div>
+        <div class="section">Mock Section</div>
+        <div class="section">Mock Section</div>
+        <div class="section">Mock Section</div>
+      `,
+    );
 
     card.setConfig({ device_id: 'device_1' });
     card.hass = mockHass as HomeAssistant;
@@ -109,21 +119,7 @@ describe('card.ts', () => {
     isPetKitStub.restore();
     getPetKitUnitStub.restore();
     renderSectionStub.restore();
-  });
-
-  describe('constructor', () => {
-    it('should log the version with proper formatting', () => {
-      // Assert that console.info was called once
-      expect(consoleInfoStub.calledOnce).to.be.true;
-
-      // Assert that it was called with the expected arguments
-      expect(
-        consoleInfoStub.calledWithExactly(
-          `%c🐱 Poat's Tools: petkit-device-card - ${version}`,
-          'color: #CFC493;',
-        ),
-      ).to.be.true;
-    });
+    taskRenderStub.restore();
   });
 
   describe('setConfig', () => {
@@ -222,41 +218,10 @@ describe('card.ts', () => {
       expect(modelElement?.textContent).to.equal('Feeder Plus Pro');
     });
 
-    it('should call renderSection for each entity category', () => {
-      card.render();
-      expect(renderSectionStub.callCount).to.equal(4);
-      expect(
-        renderSectionStub.calledWith(
-          card,
-          mockHass,
-          card['_config'],
-          'Controls',
-        ),
-      ).to.be.true;
-      expect(
-        renderSectionStub.calledWith(
-          card,
-          mockHass,
-          card['_config'],
-          'Configuration',
-        ),
-      ).to.be.true;
-      expect(
-        renderSectionStub.calledWith(
-          card,
-          mockHass,
-          card['_config'],
-          'Sensors',
-        ),
-      ).to.be.true;
-      expect(
-        renderSectionStub.calledWith(
-          card,
-          mockHass,
-          card['_config'],
-          'Diagnostic',
-        ),
-      ).to.be.true;
+    it('should call Task render when rendering sections', async () => {
+      const el = await fixture(card.render() as TemplateResult);
+      expect(el.tagName.toLowerCase()).to.equal('ha-card');
+      expect(taskRenderStub.calledOnce).to.be.true;
     });
 
     it('should render pet component when model is Pet PET and cute_lil_kitty feature is enabled', () => {

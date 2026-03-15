@@ -4,11 +4,11 @@ import { getPetKitUnit } from '@delegates/utils/petkit-unit';
 import type { HomeAssistant } from '@hass/types';
 import { pet } from '@html/pet';
 import { renderSection } from '@html/section';
+import { Task } from '@lit/task';
 import { styles } from '@theme/styles';
 import type { Config, PetKitUnit } from '@type/config';
 import { CSSResult, html, LitElement, nothing, type TemplateResult } from 'lit';
 import { state } from 'lit/decorators.js';
-import { version } from '../../package.json';
 const equal = require('fast-deep-equal');
 
 export class PetKitDevice extends LitElement {
@@ -36,13 +36,31 @@ export class PetKitDevice extends LitElement {
   @state()
   public expandedSections: Record<string, boolean> = {};
 
-  constructor() {
-    super();
-    console.info(
-      `%c🐱 Poat's Tools: petkit-device-card - ${version}`,
-      'color: #CFC493;',
-    );
-  }
+  /**
+   * Task that renders sections asynchronously
+   */
+  private readonly _renderSectionsTask = new Task(this, {
+    task: async ([unit, config, hass]) => {
+      if (!unit || !config || !hass) {
+        return html``;
+      }
+      const [controls, configurations, sensors, diagnostics] =
+        await Promise.all([
+          renderSection(this, hass, config, 'Controls', unit.controls),
+          renderSection(
+            this,
+            hass,
+            config,
+            'Configuration',
+            unit.configurations,
+          ),
+          renderSection(this, hass, config, 'Sensors', unit.sensors),
+          renderSection(this, hass, config, 'Diagnostic', unit.diagnostics),
+        ]);
+      return html`${controls}${configurations}${sensors}${diagnostics}`;
+    },
+    args: () => [this._unit, this._config, this._hass, this.expandedSections],
+  });
 
   /**
    * Returns the component's styles
@@ -119,34 +137,13 @@ export class PetKitDevice extends LitElement {
           />
         </div>
 
-        ${renderSection(
-          this,
-          this._hass,
-          this._config,
-          'Controls',
-          this._unit.controls,
-        )}
-        ${renderSection(
-          this,
-          this._hass,
-          this._config,
-          'Configuration',
-          this._unit.configurations,
-        )}
-        ${renderSection(
-          this,
-          this._hass,
-          this._config,
-          'Sensors',
-          this._unit.sensors,
-        )}
-        ${renderSection(
-          this,
-          this._hass,
-          this._config,
-          'Diagnostic',
-          this._unit.diagnostics,
-        )}
+        ${this._renderSectionsTask.render({
+          initial: () => nothing,
+          pending: () => nothing,
+          complete: (sections) => sections,
+          error: (error) =>
+            html`<div>Error rendering sections: ${String(error)}</div>`,
+        })}
       </ha-card>
     `;
   }

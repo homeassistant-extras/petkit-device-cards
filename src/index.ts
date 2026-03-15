@@ -7,6 +7,7 @@
  */
 
 import { PetKitDeviceEditor } from '@cards/editor';
+import { version } from '../package.json';
 import { PetKitDevice } from './cards/card';
 
 // Register the custom element with the browser
@@ -34,3 +35,8 @@ window.customCards.push({
   documentationURL:
     'https://github.com/homeassistant-extras/petkit-device-cards',
 });
+
+console.info(
+  `%c🐱 Poat's Tools: petkit-device-card - ${version}`,
+  'color: #CFC493;',
+);

@@ -1,4 +1,3 @@
-import * as actionHandlerModule from '@/delegates/action-handler-delegate';
 import * as stateActiveModule from '@hass/common/entity/state_active';
 import type { HomeAssistant } from '@hass/types';
 import * as percentBarModule from '@html/percent';
@@ -22,7 +21,6 @@ describe('section.ts', () => {
   let stateContentStub: SinonStub;
   let percentBarStub: SinonStub;
   let stateActiveStub: SinonStub;
-  let actionHandlerStub: SinonStub;
 
   beforeEach(() => {
     // Create mock entity states
@@ -116,17 +114,13 @@ describe('section.ts', () => {
 
     // Create stubs for the imported functions
     stateContentStub = stub(stateContentModule, 'stateContent');
-    stateContentStub.returns(html`<div class="mocked-state-content"></div>`);
+    stateContentStub.resolves(html`<div class="mocked-state-content"></div>`);
 
     percentBarStub = stub(percentBarModule, 'percentBar');
     percentBarStub.returns(html`<div class="mocked-percent-bar"></div>`);
 
     stateActiveStub = stub(stateActiveModule, 'stateActive');
     stateActiveStub.returns(true);
-    actionHandlerStub = stub(actionHandlerModule, 'actionHandler').returns({
-      bind: () => {}, // Mock the bind method
-      handleAction: () => {}, // Add any other methods that might be called
-    });
   });
 
   afterEach(() => {
@@ -134,11 +128,10 @@ describe('section.ts', () => {
     stateContentStub.restore();
     percentBarStub.restore();
     stateActiveStub.restore();
-    actionHandlerStub.restore();
   });
 
   it('should return nothing when entities array is empty', async () => {
-    const result = renderSection(
+    const result = await renderSection(
       mockElement,
       mockHass,
       mockConfig,
@@ -149,7 +142,7 @@ describe('section.ts', () => {
   });
 
   it('should return nothing when entities is undefined', async () => {
-    const result = renderSection(
+    const result = await renderSection(
       mockElement,
       mockHass,
       mockConfig,
@@ -161,7 +154,7 @@ describe('section.ts', () => {
 
   it('should render section with correct title', async () => {
     const sectionTitle = 'Test Section';
-    const result = renderSection(
+    const result = await renderSection(
       mockElement,
       mockHass,
       mockConfig,
@@ -176,7 +169,7 @@ describe('section.ts', () => {
 
   it('should apply "few-items" class when there are fewer entities than preview count', async () => {
     mockConfig.preview_count = 5; // Set preview count higher than number of entities
-    const result = renderSection(
+    const result = await renderSection(
       mockElement,
       mockHass,
       mockConfig,
@@ -190,7 +183,7 @@ describe('section.ts', () => {
 
   it('should not apply "few-items" class when there are more entities than preview count', async () => {
     mockConfig.preview_count = 2; // Set preview count lower than number of entities
-    const result = renderSection(
+    const result = await renderSection(
       mockElement,
       mockHass,
       mockConfig,
@@ -206,7 +199,7 @@ describe('section.ts', () => {
     mockConfig.preview_count = 2;
     mockElement.expandedSections = { 'Test Section': false };
 
-    const result = renderSection(
+    const result = await renderSection(
       mockElement,
       mockHass,
       mockConfig,
@@ -223,7 +216,7 @@ describe('section.ts', () => {
     mockConfig.preview_count = 1; // Preview count less than entities
     mockElement.expandedSections = { 'Test Section': true };
 
-    const result = renderSection(
+    const result = await renderSection(
       mockElement,
       mockHass,
       mockConfig,
@@ -239,7 +232,7 @@ describe('section.ts', () => {
   it('should apply "expanded" class to section when expanded', async () => {
     mockElement.expandedSections = { 'Test Section': true };
 
-    const result = renderSection(
+    const result = await renderSection(
       mockElement,
       mockHass,
       mockConfig,
@@ -255,7 +248,7 @@ describe('section.ts', () => {
     mockConfig.preview_count = 1;
     mockElement.expandedSections = { 'Test Section': false };
 
-    const result = renderSection(
+    const result = await renderSection(
       mockElement,
       mockHass,
       mockConfig,
@@ -273,7 +266,7 @@ describe('section.ts', () => {
     mockConfig.preview_count = 1;
     mockElement.expandedSections = { 'Test Section': true };
 
-    const result = renderSection(
+    const result = await renderSection(
       mockElement,
       mockHass,
       mockConfig,
@@ -291,7 +284,7 @@ describe('section.ts', () => {
 
     // Test collapsed state
     mockElement.expandedSections = { 'Test Section': false };
-    let result = renderSection(
+    let result = await renderSection(
       mockElement,
       mockHass,
       mockConfig,
@@ -304,7 +297,7 @@ describe('section.ts', () => {
 
     // Test expanded state
     mockElement.expandedSections = { 'Test Section': true };
-    result = renderSection(
+    result = await renderSection(
       mockElement,
       mockHass,
       mockConfig,
@@ -319,7 +312,7 @@ describe('section.ts', () => {
   it('should not render chevron or footer when there are fewer entities than preview count', async () => {
     mockConfig.preview_count = 5; // More than our 3 mock entities
 
-    const result = renderSection(
+    const result = await renderSection(
       mockElement,
       mockHass,
       mockConfig,
@@ -336,7 +329,7 @@ describe('section.ts', () => {
   });
 
   it('should call percentBar only for percentage measurement entities', async () => {
-    const result = renderSection(
+    const result = await renderSection(
       mockElement,
       mockHass,
       mockConfig,
@@ -356,7 +349,7 @@ describe('section.ts', () => {
     mockConfig.preview_count = 1; // Ensure we need expansion
     mockElement.expandedSections = { 'Test Section': false };
 
-    const result = renderSection(
+    const result = await renderSection(
       mockElement,
       mockHass,
       mockConfig,
@@ -379,7 +372,7 @@ describe('section.ts', () => {
     mockConfig.preview_count = 1; // Ensure we need expansion
     mockElement.expandedSections = { 'Test Section': false };
 
-    const result = renderSection(
+    const result = await renderSection(
       mockElement,
       mockHass,
       mockConfig,
@@ -400,7 +393,7 @@ describe('section.ts', () => {
 
   // New test for the desiccant_left_days translation_key condition
   it('should show percentBar for entities with desiccant_left_days translation_key', async () => {
-    const result = renderSection(
+    const result = await renderSection(
       mockElement,
       mockHass,
       mockConfig,
@@ -434,7 +427,7 @@ describe('section.ts', () => {
       mockEntities[3]!, // binary_sensor.problem
     ];
 
-    const result = renderSection(
+    const result = await renderSection(
       mockElement,
       mockHass,
       mockConfig,
