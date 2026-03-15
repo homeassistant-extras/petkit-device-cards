@@ -116,7 +116,7 @@ export class PetKitDevice extends LitElement {
     }
 
     if (
-      this._unit.model === 'Pet PET' &&
+      this._unit.model?.includes('PET') &&
       this._config.features?.includes('cute_lil_kitty')
     ) {
       return pet(this._unit);
