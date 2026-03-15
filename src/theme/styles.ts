@@ -71,14 +71,9 @@ export const styles = css`
 
   .section-chevron {
     cursor: pointer;
-    transition: transform 0.3s ease;
     color: var(--secondary-text-color);
     display: flex;
     align-items: center;
-  }
-
-  .section-chevron.expanded {
-    transform: rotate(180deg);
   }
 
   .section-footer {
