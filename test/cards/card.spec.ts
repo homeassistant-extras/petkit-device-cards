@@ -1,11 +1,9 @@
-import { PetKitDevice } from '@/cards/card';
+import { PetKitDevice } from '@cards/card';
 import * as problemUtils from '@delegates/utils/has-problem';
 import * as petKitUtils from '@delegates/utils/is-petkit';
 import * as petKitUnitUtils from '@delegates/utils/petkit-unit';
 import type { HomeAssistant } from '@hass/types';
 import * as petModule from '@html/pet';
-import * as sectionRenderer from '@html/section';
-import { Task } from '@lit/task';
 import { fixture } from '@open-wc/testing-helpers';
 import { styles } from '@theme/styles';
 import type { PetKitUnit } from '@type/config';
@@ -21,16 +19,12 @@ describe('card.ts', () => {
   let hasProblemStub: sinon.SinonStub;
   let isPetKitStub: sinon.SinonStub;
   let getPetKitUnitStub: sinon.SinonStub;
-  let renderSectionStub: sinon.SinonStub;
-  let taskRenderStub: sinon.SinonStub;
 
   beforeEach(() => {
     consoleInfoStub = stub(console, 'info');
     hasProblemStub = stub(problemUtils, 'hasProblem');
     isPetKitStub = stub(petKitUtils, 'isPetKit');
     getPetKitUnitStub = stub(petKitUnitUtils, 'getPetKitUnit');
-    renderSectionStub = stub(sectionRenderer, 'renderSection');
-    taskRenderStub = stub(Task.prototype, 'render');
 
     card = new PetKitDevice();
     mockHass = {
@@ -99,16 +93,6 @@ describe('card.ts', () => {
     hasProblemStub.returns(false);
     isPetKitStub.returns(true);
     getPetKitUnitStub.returns(mockUnit);
-    renderSectionStub.resolves(html`<div class="section">Mock Section</div>`);
-    taskRenderStub.returns(
-      html`
-        <div class="section">Mock Section</div>
-        <div class="section">Mock Section</div>
-        <div class="section">Mock Section</div>
-        <div class="section">Mock Section</div>
-      `,
-    );
-
     card.setConfig({ device_id: 'device_1' });
     card.hass = mockHass as HomeAssistant;
   });
@@ -118,8 +102,6 @@ describe('card.ts', () => {
     hasProblemStub.restore();
     isPetKitStub.restore();
     getPetKitUnitStub.restore();
-    renderSectionStub.restore();
-    taskRenderStub.restore();
   });
 
   describe('setConfig', () => {
@@ -187,10 +169,10 @@ describe('card.ts', () => {
       expect(el).to.equal(nothing);
     });
 
-    it('should render ha-card with proper sections', async () => {
+    it('should render ha-card with four section elements', async () => {
       const el = await fixture(card.render() as TemplateResult);
       expect(el.tagName.toLowerCase()).to.equal('ha-card');
-      expect(el.querySelectorAll('.section')).to.have.length(4);
+      expect(el.querySelectorAll('petkit-device-section')).to.have.length(4);
     });
 
     it('should add problem class when problem exists', async () => {
@@ -218,10 +200,13 @@ describe('card.ts', () => {
       expect(modelElement?.textContent).to.equal('Feeder Plus Pro');
     });
 
-    it('should call Task render when rendering sections', async () => {
+    it('should pass section titles to each petkit-device-section', async () => {
       const el = await fixture(card.render() as TemplateResult);
-      expect(el.tagName.toLowerCase()).to.equal('ha-card');
-      expect(taskRenderStub.calledOnce).to.be.true;
+      const sections = el.querySelectorAll('petkit-device-section');
+      expect(sections[0]?.sectionTitle).to.equal('Controls');
+      expect(sections[1]?.sectionTitle).to.equal('Configuration');
+      expect(sections[2]?.sectionTitle).to.equal('Sensors');
+      expect(sections[3]?.sectionTitle).to.equal('Diagnostic');
     });
 
     it('should render pet component when model is Pet PET and cute_lil_kitty feature is enabled', () => {

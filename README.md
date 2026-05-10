@@ -1,10 +1,8 @@
-<p align="center">
-    <img src="assets/cards.png" align="center" width="50%">
-</p>
-<p align="center"><h1 align="center">PetKit Device Card</h1></p>
-<p align="center">
-	<em>PetKit Device Integration Related Cards</em>
-</p>
+# PetKit Device Card
+
+_PetKit Device Integration Related Cards_
+
+![PetKit Device Card](assets/cards.png)
 
 ![Home Assistant](https://img.shields.io/badge/home%20assistant-%2341BDF5.svg?style=for-the-badge&logo=home-assistant&logoColor=white)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/hacs/integration)
@@ -19,18 +17,15 @@
 ![commits](https://img.shields.io/github/commit-activity/y/homeassistant-extras/petkit-device-cards?style=for-the-badge)
 ![license](https://img.shields.io/github/license/homeassistant-extras/petkit-device-cards?style=for-the-badge&logo=opensourceinitiative&logoColor=white&color=0080ff)
 
-<p align="center">Built with the tools and technologies:</p>
-<p align="center">
-	<img src="https://img.shields.io/badge/npm-CB3837.svg?style=for-the-badge&logo=npm&logoColor=white" alt="npm">
-	<img src="https://img.shields.io/badge/Prettier-F7B93E.svg?style=for-the-badge&logo=Prettier&logoColor=black" alt="Prettier">
-	<img src="https://img.shields.io/badge/TypeScript-3178C6.svg?style=for-the-badge&logo=TypeScript&logoColor=white" alt="TypeScript">
-	<img src="https://img.shields.io/badge/GitHub%20Actions-2088FF.svg?style=for-the-badge&logo=GitHub-Actions&logoColor=white" alt="GitHub%20Actions">
-	<img src="https://img.shields.io/badge/Lit-324FFF.svg?style=for-the-badge&logo=Lit&logoColor=white" alt="Lit">
-</p>
+Built with the tools and technologies:
+
+![npm](https://img.shields.io/badge/npm-CB3837.svg?style=for-the-badge&logo=npm&logoColor=white)
+![Prettier](https://img.shields.io/badge/Prettier-F7B93E.svg?style=for-the-badge&logo=Prettier&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6.svg?style=for-the-badge&logo=TypeScript&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF.svg?style=for-the-badge&logo=GitHub-Actions&logoColor=white)
+![Lit](https://img.shields.io/badge/Lit-324FFF.svg?style=for-the-badge&logo=Lit&logoColor=white)
 
 > **💡 Looking for more features?** Check out my **[Device Card](https://github.com/homeassistant-extras/device-card)** which does everything this card does plus many many more customizable features!
-
-<br>
 
 ## Overview
 
@@ -220,11 +215,7 @@ This card works with all PetKit devices supported by the Home Assistant PetKit i
 
 This card is tightly coupled to the PetKit Integration here, by [@Jezza34000](https://github.com/Jezza34000):
 
-<p align="center">
-   <a href="https://github.com/Jezza34000/homeassistant_petkit">
-      <img src="assets/logo.png" alt="drawing" width="200"/>
-   </a>
-</p>
+[![PetKit integration](assets/logo.png)](https://github.com/Jezza34000/homeassistant_petkit)
 
 ## Project Roadmap
 

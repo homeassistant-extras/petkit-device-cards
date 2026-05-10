@@ -1,10 +1,9 @@
+import '@cards/components/section/section';
 import { hasProblem } from '@delegates/utils/has-problem';
 import { isPetKit } from '@delegates/utils/is-petkit';
 import { getPetKitUnit } from '@delegates/utils/petkit-unit';
 import type { HomeAssistant } from '@hass/types';
 import { pet } from '@html/pet';
-import { renderSection } from '@html/section';
-import { Task } from '@lit/task';
 import { styles } from '@theme/styles';
 import type { Config, PetKitUnit } from '@type/config';
 import { CSSResult, html, LitElement, nothing, type TemplateResult } from 'lit';
@@ -29,38 +28,6 @@ export class PetKitDevice extends LitElement {
    * Not marked as @state as it's handled differently
    */
   private _hass!: HomeAssistant;
-
-  /**
-   * Track expanded state of sections
-   */
-  @state()
-  public expandedSections: Record<string, boolean> = {};
-
-  /**
-   * Task that renders sections asynchronously
-   */
-  private readonly _renderSectionsTask = new Task(this, {
-    task: async ([unit, config, hass]) => {
-      if (!unit || !config || !hass) {
-        return html``;
-      }
-      const [controls, configurations, sensors, diagnostics] =
-        await Promise.all([
-          renderSection(this, hass, config, 'Controls', unit.controls),
-          renderSection(
-            this,
-            hass,
-            config,
-            'Configuration',
-            unit.configurations,
-          ),
-          renderSection(this, hass, config, 'Sensors', unit.sensors),
-          renderSection(this, hass, config, 'Diagnostic', unit.diagnostics),
-        ]);
-      return html`${controls}${configurations}${sensors}${diagnostics}`;
-    },
-    args: () => [this._unit, this._config, this._hass, this.expandedSections],
-  });
 
   /**
    * Returns the component's styles
@@ -123,6 +90,7 @@ export class PetKitDevice extends LitElement {
     }
 
     const problem = hasProblem(this._unit);
+    const { _hass: hass, _config: config, _unit: unit } = this;
 
     return html`
       <ha-card class="${problem ? 'problem' : ''}">
@@ -137,13 +105,30 @@ export class PetKitDevice extends LitElement {
           />
         </div>
 
-        ${this._renderSectionsTask.render({
-          initial: () => nothing,
-          pending: () => nothing,
-          complete: (sections) => sections,
-          error: (error) =>
-            html`<div>Error rendering sections: ${String(error)}</div>`,
-        })}
+        <petkit-device-section
+          .hass=${hass}
+          .config=${config}
+          .sectionTitle=${'Controls'}
+          .entities=${unit.controls}
+        ></petkit-device-section>
+        <petkit-device-section
+          .hass=${hass}
+          .config=${config}
+          .sectionTitle=${'Configuration'}
+          .entities=${unit.configurations}
+        ></petkit-device-section>
+        <petkit-device-section
+          .hass=${hass}
+          .config=${config}
+          .sectionTitle=${'Sensors'}
+          .entities=${unit.sensors}
+        ></petkit-device-section>
+        <petkit-device-section
+          .hass=${hass}
+          .config=${config}
+          .sectionTitle=${'Diagnostic'}
+          .entities=${unit.diagnostics}
+        ></petkit-device-section>
       </ha-card>
     `;
   }

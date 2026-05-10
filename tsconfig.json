@@ -25,6 +25,7 @@
       "@theme/*": ["./src/theme/*"],
       "@html/*": ["./src/html/*"],
       "@delegates/*": ["./src/delegates/*"],
+      "@helpers/*": ["./src/helpers/*"],
       "@/*": ["./src/*"]
     }
   }

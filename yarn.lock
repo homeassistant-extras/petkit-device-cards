@@ -336,19 +336,12 @@
   resolved "https://registry.yarnpkg.com/@lit-labs/ssr-dom-shim/-/ssr-dom-shim-1.4.0.tgz#55eb80ab5ef6e188f7e541c1e2bea1ef582413b8"
   integrity sha512-ficsEARKnmmW5njugNYKipTm4SFnbik7CXtoencDZzmzo/dQ+2Q0bgkzJuoJP20Aj0F+izzJjOqsnkd6F/o1bw==
 
-"@lit/reactive-element@^1.0.0 || ^2.0.0", "@lit/reactive-element@^2.1.0":
+"@lit/reactive-element@^2.1.0":
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/@lit/reactive-element/-/reactive-element-2.1.1.tgz#0662ac4a43d4898974aef9a6c5cd47b9e331919a"
   integrity sha512-N+dm5PAYdQ8e6UlywyyrgI2t++wFGXfHx+dSJ1oBrg6FAxUj40jId++EaRm80MKX5JnlH1sBsyZ5h0bcZKemCg==
   dependencies:
     "@lit-labs/ssr-dom-shim" "^1.4.0"
-
-"@lit/task@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@lit/task/-/task-1.0.3.tgz#52a66f0689d0aa9567b58df46842d29bbb8be20f"
-  integrity sha512-1gJGJl8WON+2j0y9xfcD+XsS1rvcy3XDgsIhcdUW++yTR8ESjZW6o7dn8M8a4SZM8NnJe6ynS2cKWwsbfLOurg==
-  dependencies:
-    "@lit/reactive-element" "^1.0.0 || ^2.0.0"
 
 "@lmdb/lmdb-darwin-arm64@2.8.5":
   version "2.8.5"
@@ -2956,10 +2949,10 @@ js-yaml@^4.1.0:
   dependencies:
     argparse "^2.0.1"
 
-jsdom@^29.1.1:
-  version "29.1.1"
-  resolved "https://registry.yarnpkg.com/jsdom/-/jsdom-29.1.1.tgz#5b9704906f3cd510c34aa941ae2f8f7f8179df01"
-  integrity sha512-ECi4Fi2f7BdJtUKTflYRTiaMxIB0O6zfR1fX0GXpUrf6flp8QIYn1UT20YQqdSOfk2dfkCwS8LAFoJDEppNK5Q==
+jsdom@^29.1.0:
+  version "29.1.0"
+  resolved "https://registry.yarnpkg.com/jsdom/-/jsdom-29.1.0.tgz#94f1e55fca85f646e91e5d886a25109b33bcc284"
+  integrity sha512-YNUc7fB9QuvSSQWfrH0xF+TyABkxUwx8sswgIDaCrw4Hol8BghdZDkITtZheRJeMtzWlnTfsM3bBBusRvpO1wg==
   dependencies:
     "@asamuzakjp/css-color" "^5.1.11"
     "@asamuzakjp/dom-selector" "^7.1.1"

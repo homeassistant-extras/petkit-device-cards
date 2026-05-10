@@ -1,77 +1,69 @@
-import type { PetKitDevice } from '@cards/card';
+import '@cards/components/row/row';
 import type { HomeAssistant } from '@hass/types';
 import type { Config, EntityInformation } from '@type/config';
 import { html, nothing, type TemplateResult } from 'lit';
-import { repeat } from 'lit/directives/repeat.js';
-import { row } from './row';
 
 /**
- * Toggles the expanded state of a section
- * @param {string} sectionTitle - The title of the section to toggle
- * @param {Event} e - The click event
+ * Renders a collapsible block of entity rows. Section open/closed state is owned
+ * by the caller ({@link PetKitDeviceSection}); attribute expansion is per row.
  */
-const toggleSection = (
-  element: PetKitDevice,
-  sectionTitle: string,
-  e: Event,
-) => {
-  const expandedSections = element.expandedSections;
-
-  element.expandedSections = {
-    ...expandedSections,
-    [sectionTitle]: !expandedSections[sectionTitle],
-  };
-};
-
-export const renderSection = async (
-  element: PetKitDevice,
+export const renderSection = (
   hass: HomeAssistant,
   config: Config,
   title: string,
   entities: EntityInformation[],
-): Promise<TemplateResult | typeof nothing> => {
+  sectionExpanded: boolean,
+  onToggleSection: () => void,
+): TemplateResult | typeof nothing => {
   if (!entities || entities.length === 0) {
     return nothing;
   }
 
   const size = config.preview_count || 3;
   const needsExpansion = entities.length > size;
-  const isExpanded = element.expandedSections[title] || false;
   const displayEntities =
-    needsExpansion && !isExpanded ? entities.slice(0, size) : entities;
+    needsExpansion && !sectionExpanded ? entities.slice(0, size) : entities;
 
-  const rows = await Promise.all(
-    displayEntities.map((entity) => row(hass, entity)),
+  const rowTemplates = displayEntities.map(
+    (entity) =>
+      html`<petkit-device-row
+        .hass=${hass}
+        .config=${config}
+        .entity=${entity}
+      ></petkit-device-row>`,
   );
 
-  // Determine section class based on expanded state and number of items
-  const sectionClass = `section ${isExpanded ? 'expanded' : ''} ${!needsExpansion ? 'few-items' : ''}`;
+  const sectionClass = `section ${sectionExpanded ? 'expanded' : ''} ${!needsExpansion ? 'few-items' : ''}`;
 
   return html`<div class="${sectionClass}">
     <div class="section-header">
       <div class="section-title">${title}</div>
       ${needsExpansion
         ? html`<div
-            class="section-chevron ${isExpanded ? 'expanded' : ''}"
-            @click=${(e: Event) => toggleSection(element, title, e)}
+            class="section-chevron ${sectionExpanded ? 'expanded' : ''}"
+            @click=${(e: Event) => {
+              e.preventDefault();
+              onToggleSection();
+            }}
           >
-            <ha-icon icon="mdi:chevron-${isExpanded ? 'up' : 'down'}"></ha-icon>
+            <ha-icon
+              icon="mdi:chevron-${sectionExpanded ? 'up' : 'down'}"
+            ></ha-icon>
           </div>`
         : nothing}
     </div>
-    ${repeat(
-      displayEntities,
-      (entity) => entity.entity_id,
-      (entity, index) => rows[index],
-    )}
+    ${rowTemplates}
     ${needsExpansion
       ? html`<div class="section-footer">
-          ${isExpanded
+          ${sectionExpanded
             ? nothing
             : html`
                 <div
                   class="show-more"
-                  @click=${(e: Event) => toggleSection(element, title, e)}
+                  @click=${(e: Event) => {
+                    e.preventDefault();
+                    onToggleSection();
+                  }}
                 >
                   Show ${entities.length - size} more...
                 </div>

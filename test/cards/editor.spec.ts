@@ -1,4 +1,4 @@
-import { PetKitDeviceEditor } from '@/cards/editor';
+import { PetKitDeviceEditor } from '@cards/editor';
 import type { HomeAssistant } from '@hass/types';
 import { fixture } from '@open-wc/testing-helpers';
 import type { Config } from '@type/config';

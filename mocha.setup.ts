@@ -15,6 +15,7 @@ const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
 // Set up browser environment globals
 global.window = dom.window as any;
 global.document = dom.window.document;
+global.Node = (dom.window as any).Node;
 global.requestAnimationFrame = (callback) => setTimeout(callback, 0);
 
 // Add missing DOM features

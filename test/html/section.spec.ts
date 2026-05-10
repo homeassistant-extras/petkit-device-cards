@@ -1,29 +1,18 @@
-import * as stateActiveModule from '@hass/common/entity/state_active';
 import type { HomeAssistant } from '@hass/types';
-import * as percentBarModule from '@html/percent';
+import { resetPoatCardHelpersForTests } from '@helpers/card-helpers';
 import { renderSection } from '@html/section';
-import * as stateContentModule from '@html/state-content';
-import { fixture, html } from '@open-wc/testing-helpers';
+import { fixture } from '@open-wc/testing-helpers';
 import type { Config, EntityInformation, EntityState } from '@type/config';
 import { expect } from 'chai';
 import { nothing, type TemplateResult } from 'lit';
-import { stub, type SinonStub } from 'sinon';
 
 describe('section.ts', () => {
-  // Common test variables
   let mockHass: HomeAssistant;
   let mockConfig: Config;
-  let mockElement: any;
   let mockEntities: EntityInformation[];
   let mockEntityStates: Record<string, EntityState>;
 
-  // Stubs for imported functions
-  let stateContentStub: SinonStub;
-  let percentBarStub: SinonStub;
-  let stateActiveStub: SinonStub;
-
   beforeEach(() => {
-    // Create mock entity states
     mockEntityStates = {
       'sensor.test_percentage': {
         entity_id: 'sensor.test_percentage',
@@ -58,7 +47,6 @@ describe('section.ts', () => {
       },
     };
 
-    // Create mock entities as EntityInformation
     mockEntities = [
       {
         entity_id: 'sensor.test_percentage',
@@ -97,69 +85,56 @@ describe('section.ts', () => {
       } as any as EntityInformation,
     ];
 
-    // Mock Home Assistant
     mockHass = {
       states: mockEntityStates,
     } as any as HomeAssistant;
 
-    // Mock config
     mockConfig = {
       preview_count: 5,
     } as Config;
-
-    // Mock element with expandedSections property
-    mockElement = {
-      expandedSections: {},
-    };
-
-    // Create stubs for the imported functions
-    stateContentStub = stub(stateContentModule, 'stateContent');
-    stateContentStub.resolves(html`<div class="mocked-state-content"></div>`);
-
-    percentBarStub = stub(percentBarModule, 'percentBar');
-    percentBarStub.returns(html`<div class="mocked-percent-bar"></div>`);
-
-    stateActiveStub = stub(stateActiveModule, 'stateActive');
-    stateActiveStub.returns(true);
   });
 
   afterEach(() => {
-    // Restore all stubs
-    stateContentStub.restore();
-    percentBarStub.restore();
-    stateActiveStub.restore();
+    resetPoatCardHelpersForTests();
   });
 
+  const noop = () => {
+    /* stub toggle */
+  };
+
   it('should return nothing when entities array is empty', async () => {
-    const result = await renderSection(
-      mockElement,
+    const result = renderSection(
       mockHass,
       mockConfig,
       'Test Section',
       [],
+      false,
+      noop,
     );
     expect(result).to.equal(nothing);
   });
 
   it('should return nothing when entities is undefined', async () => {
-    const result = await renderSection(
-      mockElement,
+    const result = renderSection(
       mockHass,
       mockConfig,
       'Test Section',
       undefined as any,
+      false,
+      noop,
     );
     expect(result).to.equal(nothing);
   });
 
   it('should render section with correct title', async () => {
     const sectionTitle = 'Test Section';
-    const result = await renderSection(
-      mockElement,
+    const result = renderSection(
       mockHass,
       mockConfig,
       sectionTitle,
       mockEntities,
+      false,
+      noop,
     );
     const el = await fixture(result as TemplateResult);
 
@@ -168,13 +143,14 @@ describe('section.ts', () => {
   });
 
   it('should apply "few-items" class when there are fewer entities than preview count', async () => {
-    mockConfig.preview_count = 5; // Set preview count higher than number of entities
-    const result = await renderSection(
-      mockElement,
+    mockConfig.preview_count = 5;
+    const result = renderSection(
       mockHass,
       mockConfig,
       'Test Section',
       mockEntities,
+      false,
+      noop,
     );
     const el = await fixture(result as TemplateResult);
 
@@ -182,13 +158,14 @@ describe('section.ts', () => {
   });
 
   it('should not apply "few-items" class when there are more entities than preview count', async () => {
-    mockConfig.preview_count = 2; // Set preview count lower than number of entities
-    const result = await renderSection(
-      mockElement,
+    mockConfig.preview_count = 2;
+    const result = renderSection(
       mockHass,
       mockConfig,
       'Test Section',
       mockEntities,
+      false,
+      noop,
     );
     const el = await fixture(result as TemplateResult);
 
@@ -197,47 +174,46 @@ describe('section.ts', () => {
 
   it('should show the correct number of items based on preview_count when not expanded', async () => {
     mockConfig.preview_count = 2;
-    mockElement.expandedSections = { 'Test Section': false };
 
-    const result = await renderSection(
-      mockElement,
+    const result = renderSection(
       mockHass,
       mockConfig,
       'Test Section',
       mockEntities,
+      false,
+      noop,
     );
     const el = await fixture(result as TemplateResult);
 
-    const rows = el.querySelectorAll('.row');
-    expect(rows.length).to.equal(2); // Should match preview_count
+    const rows = el.querySelectorAll('petkit-device-row');
+    expect(rows.length).to.equal(2);
   });
 
   it('should show all items when section is expanded', async () => {
-    mockConfig.preview_count = 1; // Preview count less than entities
-    mockElement.expandedSections = { 'Test Section': true };
+    mockConfig.preview_count = 1;
 
-    const result = await renderSection(
-      mockElement,
+    const result = renderSection(
       mockHass,
       mockConfig,
       'Test Section',
       mockEntities,
+      true,
+      noop,
     );
     const el = await fixture(result as TemplateResult);
 
-    const rows = el.querySelectorAll('.row');
-    expect(rows.length).to.equal(mockEntities.length); // Should show all entities
+    const rows = el.querySelectorAll('petkit-device-row');
+    expect(rows.length).to.equal(mockEntities.length);
   });
 
   it('should apply "expanded" class to section when expanded', async () => {
-    mockElement.expandedSections = { 'Test Section': true };
-
-    const result = await renderSection(
-      mockElement,
+    const result = renderSection(
       mockHass,
       mockConfig,
       'Test Section',
       mockEntities,
+      true,
+      noop,
     );
     const el = await fixture(result as TemplateResult);
 
@@ -246,32 +222,32 @@ describe('section.ts', () => {
 
   it('should render "Show more" text with correct count when not expanded', async () => {
     mockConfig.preview_count = 1;
-    mockElement.expandedSections = { 'Test Section': false };
 
-    const result = await renderSection(
-      mockElement,
+    const result = renderSection(
       mockHass,
       mockConfig,
       'Test Section',
       mockEntities,
+      false,
+      noop,
     );
     const el = await fixture(result as TemplateResult);
 
     const showMoreElement = el.querySelector('.show-more');
     expect(showMoreElement).to.exist;
-    expect(showMoreElement?.textContent?.trim()).to.include('Show 3 more...'); // 4 entities - 1 preview = 2 more
+    expect(showMoreElement?.textContent?.trim()).to.include('Show 3 more...');
   });
 
   it('should not render "Show more" text when expanded', async () => {
     mockConfig.preview_count = 1;
-    mockElement.expandedSections = { 'Test Section': true };
 
-    const result = await renderSection(
-      mockElement,
+    const result = renderSection(
       mockHass,
       mockConfig,
       'Test Section',
       mockEntities,
+      true,
+      noop,
     );
     const el = await fixture(result as TemplateResult);
 
@@ -280,29 +256,27 @@ describe('section.ts', () => {
   });
 
   it('should render chevron icon with correct direction based on expanded state', async () => {
-    mockConfig.preview_count = 1; // Make sure we need expansion
+    mockConfig.preview_count = 1;
 
-    // Test collapsed state
-    mockElement.expandedSections = { 'Test Section': false };
-    let result = await renderSection(
-      mockElement,
+    let result = renderSection(
       mockHass,
       mockConfig,
       'Test Section',
       mockEntities,
+      false,
+      noop,
     );
     let el = await fixture(result as TemplateResult);
     let chevronIcon = el.querySelector('ha-icon');
     expect(chevronIcon?.getAttribute('icon')).to.equal('mdi:chevron-down');
 
-    // Test expanded state
-    mockElement.expandedSections = { 'Test Section': true };
-    result = await renderSection(
-      mockElement,
+    result = renderSection(
       mockHass,
       mockConfig,
       'Test Section',
       mockEntities,
+      true,
+      noop,
     );
     el = await fixture(result as TemplateResult);
     chevronIcon = el.querySelector('ha-icon');
@@ -310,14 +284,15 @@ describe('section.ts', () => {
   });
 
   it('should not render chevron or footer when there are fewer entities than preview count', async () => {
-    mockConfig.preview_count = 5; // More than our 3 mock entities
+    mockConfig.preview_count = 5;
 
-    const result = await renderSection(
-      mockElement,
+    const result = renderSection(
       mockHass,
       mockConfig,
       'Test Section',
       mockEntities,
+      false,
+      noop,
     );
     const el = await fixture(result as TemplateResult);
 
@@ -328,116 +303,68 @@ describe('section.ts', () => {
     expect(footer).to.not.exist;
   });
 
-  it('should call percentBar only for percentage measurement entities', async () => {
-    const result = await renderSection(
-      mockElement,
+  it('should render one petkit-device-row per entity', async () => {
+    const result = renderSection(
       mockHass,
       mockConfig,
       'Test Section',
       mockEntities,
+      false,
+      noop,
     );
-    await fixture(result as TemplateResult);
+    const el = await fixture(result as TemplateResult);
 
-    // Should be called only for the percentage entity
-    expect(percentBarStub.callCount).to.equal(2);
-    expect(percentBarStub.firstCall.args[0].entity_id).to.equal(
-      'sensor.test_percentage',
-    );
+    const rows = el.querySelectorAll('petkit-device-row');
+    expect(rows.length).to.equal(mockEntities.length);
   });
 
-  it('should toggle expanded state when clicking on chevron', async () => {
-    mockConfig.preview_count = 1; // Ensure we need expansion
-    mockElement.expandedSections = { 'Test Section': false };
+  it('should invoke toggle when clicking on chevron', async () => {
+    mockConfig.preview_count = 1;
+    let toggled = false;
+    const onToggle = () => {
+      toggled = true;
+    };
 
-    const result = await renderSection(
-      mockElement,
+    const result = renderSection(
       mockHass,
       mockConfig,
       'Test Section',
       mockEntities,
+      false,
+      onToggle,
     );
     const el = await fixture(result as TemplateResult);
 
     const chevron = el.querySelector('.section-chevron') as HTMLElement;
     expect(chevron).to.exist;
 
-    // Simulate click
     chevron.click();
 
-    // Check that the expanded state was toggled
-    expect(mockElement.expandedSections['Test Section']).to.be.true;
+    expect(toggled).to.be.true;
   });
 
-  it('should toggle expanded state when clicking on "Show more"', async () => {
-    mockConfig.preview_count = 1; // Ensure we need expansion
-    mockElement.expandedSections = { 'Test Section': false };
+  it('should invoke toggle when clicking on "Show more"', async () => {
+    mockConfig.preview_count = 1;
+    let toggled = false;
+    const onToggle = () => {
+      toggled = true;
+    };
 
-    const result = await renderSection(
-      mockElement,
+    const result = renderSection(
       mockHass,
       mockConfig,
       'Test Section',
       mockEntities,
+      false,
+      onToggle,
     );
     const el = await fixture(result as TemplateResult);
 
     const showMore = el.querySelector('.show-more') as HTMLElement;
     expect(showMore).to.exist;
 
-    // Simulate click
     showMore.click();
 
-    // Check that the expanded state was toggled
-    expect(mockElement.expandedSections['Test Section']).to.be.true;
-  });
-
-  // New test for the desiccant_left_days translation_key condition
-  it('should show percentBar for entities with desiccant_left_days translation_key', async () => {
-    const result = await renderSection(
-      mockElement,
-      mockHass,
-      mockConfig,
-      'Test Section',
-      mockEntities,
-    );
-
-    await fixture(result as TemplateResult);
-
-    // Verify percentBar was called for both percentage entity and desiccant entity
-    expect(percentBarStub.callCount).to.equal(2);
-
-    // First call should be for the percentage sensor
-    expect(percentBarStub.getCall(0).args[0].entity_id).to.equal(
-      'sensor.test_percentage',
-    );
-
-    // Second call should be for the desiccant entity with translation_key
-    expect(percentBarStub.getCall(1).args[0].entity_id).to.equal(
-      'sensor.desiccant_left',
-    );
-    expect(percentBarStub.getCall(1).args[0].translation_key).to.equal(
-      'desiccant_left_days',
-    );
-  });
-
-  it('should not show percentBar for entities without proper conditions', async () => {
-    // Create a new array with only entities that shouldn't display percent bars
-    const nonPercentEntities: EntityInformation[] = [
-      mockEntities[2]!, // light.test_light
-      mockEntities[3]!, // binary_sensor.problem
-    ];
-
-    const result = await renderSection(
-      mockElement,
-      mockHass,
-      mockConfig,
-      'Test Section',
-      nonPercentEntities,
-    );
-
-    await fixture(result as TemplateResult);
-
-    // Verify percentBar was not called for these entities
-    expect(percentBarStub.callCount).to.equal(0);
+    expect(toggled).to.be.true;
   });
 });

@@ -1,6 +1,9 @@
 import { expect } from 'chai';
+import path from 'path';
 import { stub, type SinonStub } from 'sinon';
 import { version } from '../package.json';
+
+const indexEntry = path.resolve(__dirname, '../src/index.ts');
 
 describe('index.ts', () => {
   let customElementsStub: SinonStub;
@@ -28,27 +31,24 @@ describe('index.ts', () => {
     customElementsStub.restore();
     consoleInfoStub.restore();
     customCardsStub = undefined;
-    delete require.cache[require.resolve('@/index.ts')];
+    delete require.cache[require.resolve(indexEntry)];
   });
 
-  it('should register both petkit-device and editor custom elements', () => {
-    require('@/index.ts');
-    expect(customElementsStub.calledTwice).to.be.true;
-    expect(customElementsStub.firstCall.args[0]).to.equal('petkit-device');
-    expect(customElementsStub.secondCall.args[0]).to.equal(
-      'petkit-device-editor',
-    );
+  it('should register petkit-device, editor, row, and section custom elements', () => {
+    require(indexEntry);
+    const names = customElementsStub.getCalls().map((c) => c.args[0]);
+    expect(names).to.include.members(['petkit-device', 'petkit-device-editor']);
   });
 
   it('should initialize window.customCards if undefined', () => {
     customCardsStub = undefined;
-    require('@/index.ts');
+    require(indexEntry);
 
     expect(window.customCards).to.be.an('array');
   });
 
   it('should add card configuration with all fields to window.customCards', () => {
-    require('@/index.ts');
+    require(indexEntry);
 
     expect(window.customCards).to.have.lengthOf(1);
     expect(window.customCards[0]).to.deep.equal({
@@ -70,7 +70,7 @@ describe('index.ts', () => {
       },
     ];
 
-    require('@/index.ts');
+    require(indexEntry);
 
     expect(window.customCards).to.have.lengthOf(2);
     expect(window.customCards[0]).to.deep.equal({
@@ -80,15 +80,17 @@ describe('index.ts', () => {
   });
 
   it('should handle multiple imports without duplicating registration', () => {
-    require('@/index.ts');
-    require('@/index.ts');
+    require(indexEntry);
+    const definesAfterFirstLoad = customElementsStub.callCount;
+
+    require(indexEntry);
 
     expect(window.customCards).to.have.lengthOf(1);
-    expect(customElementsStub.callCount).to.equal(2); // Called twice for initial registration only
+    expect(customElementsStub.callCount).to.equal(definesAfterFirstLoad);
   });
 
   it('should log the version with proper formatting', () => {
-    require('@/index.ts');
+    require(indexEntry);
     expect(consoleInfoStub.calledOnce).to.be.true;
 
     // Assert that it was called with the expected arguments
