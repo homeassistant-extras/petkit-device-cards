@@ -265,6 +265,7 @@ This project is protected under the MIT License. For more details, refer to the 
 - Built using [LitElement](https://lit.dev/)
 - Inspired by Home Assistant's chip design
 - Thanks to all contributors!
+- Maintained by [Patrick Masters](https://github.com/warmfire540) / [Curious Cat Consulting](https://curiouscat.consulting/projects/ha-petkit-device-cards?utm_source=github-petkit-device-cards&utm_medium=readme&utm_campaign=oss-presence&utm_content=maintained-by)
 
 [![contributors](https://contrib.rocks/image?repo=homeassistant-extras/petkit-device-cards)](https://github.com{/homeassistant-extras/petkit-device-cards/}graphs/contributors)
 

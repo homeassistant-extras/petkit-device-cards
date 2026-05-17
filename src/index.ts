@@ -7,8 +7,12 @@
  */
 
 import { PetKitDeviceEditor } from '@cards/editor';
+import { resolvePoatCardHelpers } from '@helpers/card-helpers';
 import { version } from '../package.json';
 import { PetKitDevice } from './cards/card';
+
+// Kick off HA card helper resolution once when the bundle loads
+resolvePoatCardHelpers(globalThis.loadCardHelpers);
 
 // Register the custom element with the browser
 customElements.define('petkit-device', PetKitDevice);
